@@ -32,7 +32,7 @@ namespace {{ namespace }}
         public Task DisconnectAsync() =>
             _client.DisconnectAsync();
 
-        public Task<IStatusResult<OperationStatus>> Unsubscribe(SubscriptionCancelRequest request) =>
-            _client.Unsubscribe(request);
+        public Task<IStatusResult<OperationStatus>> UnsubscribeAsync(SubscriptionCancelRequest request) =>
+            _client.UnsubscribeAsync(request);
     }
 }
