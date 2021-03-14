@@ -1,0 +1,29 @@
+{{~ for ns in usages ~}}
+using {{ ns }};
+{{~ end ~}}
+
+namespace {{ namespace }}
+{
+    public static class {{ name }}ClientServiceContainerExtensions
+    {
+        public static IServiceContainer Add{{ name }}Client(this IServiceContainer container, Action<ClientConfiguration> configure)
+        {
+            // client
+            container.Add(sp =>
+            {
+                var configuration = new ClientConfiguration();
+                configure(configuration);
+
+                var factory = sp.Resolve<IClientFactory>();
+                var clientBase = factory.Create(configuration);
+
+                return new {{ name }}Client(clientBase);
+            }).AsSelf().Singleton();
+
+            // system
+            container.AddWebSocketClient();
+
+            return container;
+        }
+    }
+}

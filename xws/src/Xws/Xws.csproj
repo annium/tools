@@ -16,5 +16,18 @@
     <ItemGroup>
         <PackageReference Include="Annium.Core.DependencyInjection" Version="0.1.0" />
         <PackageReference Include="Annium.Core.Entrypoint" Version="0.1.0" />
+        <PackageReference Include="Annium.Core.Primitives" Version="0.1.0" />
+        <PackageReference Include="Annium.Core.Reflection" Version="0.1.0" />
+        <PackageReference Include="Annium.Core.Runtime" Version="0.1.0" />
+        <PackageReference Include="Annium.Core.Runtime.Loader" Version="0.1.0" />
+        <PackageReference Include="Annium.Extensions.Arguments" Version="0.1.0" />
+        <PackageReference Include="Annium.Infrastructure.WebSockets.Server" Version="0.1.0" />
+        <PackageReference Include="Annium.Logging.Console" Version="0.1.0" />
+        <PackageReference Include="Annium.Serialization.Json" Version="0.1.0" />
+        <PackageReference Include="Scriban" Version="3.5.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Templates/**" />
+        <EmbeddedResource Remove="Templates/.*" />
     </ItemGroup>
 </Project>

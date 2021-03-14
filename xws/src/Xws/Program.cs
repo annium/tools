@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using Annium.Core.Entrypoint;
+using Annium.Extensions.Arguments;
 
 namespace Xws
 {
@@ -12,7 +13,7 @@ namespace Xws
             CancellationToken token
         )
         {
-            Console.WriteLine("Hello from Xws");
+            new Commander(provider).Run<Commands.Group>(args, token);
         }
 
         internal static int Main(string[] args) => new Entrypoint()

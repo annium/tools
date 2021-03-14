@@ -1,0 +1,41 @@
+{{~ for ns in usages ~}}
+using {{ ns }};
+{{~ end ~}}
+
+namespace {{ namespace }}
+{
+    public class {{ type }}
+    {
+        private readonly IClientBase _client;
+
+        public {{ type }}(IClientBase client)
+        {
+            _client = client;
+        }
+        {{~ for handler in broadcasters ~}}
+
+        public Action Listen{{ handler.message_name }}(Action<{{ handler.message_type }}> handle) =>
+            _client.Listen(handle);
+        {{~ end ~}}
+        {{~ for handler in event_handlers ~}}
+
+        public void Notify{{ handler.message_name }}({{ handler.message_type }} ev) =>
+            _client.Notify(ev);
+        {{~ end ~}}
+        {{~ for handler in request_handlers ~}}
+
+        public Task<IStatusResult<OperationStatus>> {{ handler.request_name }}({{ handler.request_type }} request) =>
+            _client.Send(request);
+        {{~ end ~}}
+        {{~ for handler in request_response_handlers ~}}
+
+        public Task<IStatusResult<OperationStatus, {{ handler.response_type }}>> {{ handler.request_name }}({{ handler.request_type }} request) =>
+            _client.Fetch<{{ handler.response_type }}>(request);
+        {{~ end ~}}
+        {{~ for handler in subscription_handlers ~}}
+
+        public Task<IStatusResult<OperationStatus, Guid>> Subscribe{{ handler.init_name }}({{ handler.init_type }} init, Action<{{ handler.message_type }}> handle) =>
+            _client.Subscribe(init, handle);
+        {{~ end ~}}
+    }
+}
