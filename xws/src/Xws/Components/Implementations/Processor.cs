@@ -166,7 +166,12 @@ namespace Xws.Components.Implementations
 
             var clients = ancestors.Values
                 .OrderBy(x => x.Namespace.ToString())
-                .Concat<IClientView>(children.Select(x => (ClientView) x).OrderBy(x => x.Namespace))
+                .ThenBy(x => x.Name)
+                .Concat<IClientView>(children
+                    .Select(x => (ClientView) x)
+                    .OrderBy(x => x.Namespace)
+                    .ThenBy(x => x.Name)
+                )
                 .ToArray();
 
             return new ClientContainerView(usages, ns.ToString(), name, type, clients);
