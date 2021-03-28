@@ -61,12 +61,13 @@ namespace Xws.Components.Implementations
             return tm.Types
                 .Select(x => (
                     type: x,
-                    iface: x
+                    ifaces: x
                         .GetInterfaces()
-                        .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition().FullName == targetName)!
+                        .Where(i => i.IsGenericType && i.GetGenericTypeDefinition().FullName == targetName)
+                        .ToArray()
                 ))
-                .Where(x => x.iface != default)
-                .Select(x =>
+                .Where(x => x.ifaces.Length > 0)
+                .SelectMany(x =>
                 {
                     var nsParts = (x.type.Namespace ?? string.Empty)
                         .ToNamespaceArray()
@@ -75,7 +76,7 @@ namespace Xws.Components.Implementations
                         .ToList();
                     var ns = Namespace.New(nsParts);
 
-                    return new RawHandlerModel(x.type, x.iface.GetGenericArguments(), ns);
+                    return x.ifaces.Select(i => new RawHandlerModel(x.type, i.GetGenericArguments(), ns));
                 });
         }
 
