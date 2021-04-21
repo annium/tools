@@ -12,8 +12,8 @@ namespace {{ namespace }}
         public {{ client.type }} {{ client.name }} { get; }
         {{~ end ~}}
         public bool IsConnected => _client.IsConnected;
-        public event Action ConnectionLost = delegate { };
-        public event Action ConnectionRestored = delegate { };
+        public event Func<Task> ConnectionLost = () => Task.CompletedTask;
+        public event Func<Task> ConnectionRestored = () => Task.CompletedTask;
         private readonly IClientBase _client;
 
         public {{ type }}(IClientBase client)
@@ -22,8 +22,8 @@ namespace {{ namespace }}
             {{ client.name }} = new {{ client.type }}(client);
             {{~ end ~}}
             _client = client;
-            _client.ConnectionLost += ConnectionLost;
-            _client.ConnectionRestored += ConnectionRestored;
+            _client.ConnectionLost += () => ConnectionLost.Invoke();
+            _client.ConnectionRestored += () => ConnectionRestored.Invoke();
         }
 
         public Task ConnectAsync(CancellationToken ct = default) =>
