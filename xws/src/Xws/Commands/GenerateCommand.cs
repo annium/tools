@@ -29,7 +29,7 @@ namespace Xws.Commands
             _logger = logger;
         }
 
-        public override void Handle(GenerateCommandConfiguration cfg, CancellationToken token)
+        public override void Handle(GenerateCommandConfiguration cfg, CancellationToken ct)
         {
             _logger.Info($"Generate '{cfg.ProjectName}' client");
 
