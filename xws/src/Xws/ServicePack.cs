@@ -9,6 +9,7 @@ namespace Xws
     {
         public override void Register(IServiceContainer container, IServiceProvider provider)
         {
+            // can't understand that, but preloading assemblies speeds up process greatly, comparing to loading via AssemblyLoadContext
             container.AddRuntimeTools(GetType().Assembly, true);
             container.AddTimeProvider();
             container.AddJsonSerializers();
