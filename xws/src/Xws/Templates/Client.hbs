@@ -14,8 +14,8 @@ namespace {{ namespace }}
         }
         {{~ for handler in broadcasters ~}}
 
-        public Action Listen{{ handler.message_name }}(Action<{{ handler.message_type }}> handle) =>
-            _client.Listen(handle);
+        public IObservable<{{ handler.message_type }}> Listen{{ handler.message_name }}() =>
+            _client.Listen<{{ handler.message_type }}>();
         {{~ end ~}}
         {{~ for handler in event_handlers ~}}
 
@@ -34,8 +34,8 @@ namespace {{ namespace }}
         {{~ end ~}}
         {{~ for handler in subscription_handlers ~}}
 
-        public Task<IStatusResult<OperationStatus, Guid>> Subscribe{{ handler.init_name }}Async({{ handler.init_type }} init, Action<{{ handler.message_type }}> handle) =>
-            _client.SubscribeAsync(init, handle);
+        public IObservable<{{ handler.message_type }}> Listen{{ handler.init_name }}({{ handler.init_type }} init) =>
+            _client.Listen<{{ handler.init_type }}, {{ handler.message_type }}>(init);
         {{~ end ~}}
     }
 }

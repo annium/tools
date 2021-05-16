@@ -143,10 +143,7 @@ namespace Xws.Components.Implementations
                 ? new[]
                 {
                     "System",
-                    "Annium.Architecture.Base",
-                    "Annium.Data.Operations",
                     "Annium.Infrastructure.WebSockets.Client",
-                    "Annium.Infrastructure.WebSockets.Domain.Requests",
                     "System.Threading",
                     "System.Threading.Tasks",
                 }

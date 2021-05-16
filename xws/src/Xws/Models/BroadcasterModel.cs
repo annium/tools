@@ -6,7 +6,12 @@ namespace Xws.Models
     {
         public Namespace Namespace { get; }
         public string Name { get; }
-        public Type[] References => new[] {typeof(Action), typeof(Action<>).MakeGenericType(Message)};
+
+        public Type[] References => new[]
+        {
+            typeof(IObservable<>).MakeGenericType(Message)
+        };
+
         public Type Message { get; }
 
         public BroadcasterModel(
