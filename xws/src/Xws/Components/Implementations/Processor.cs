@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Annium.Core.Primitives;
+using Annium.Core.Reflection;
 using Xws.Extensions;
 using Xws.Models;
 using Xws.Views;
@@ -36,13 +37,13 @@ namespace Xws.Components.Implementations
             new EventHandlerView(model.Message.FriendlyName(), model.Name);
 
         private IHandlerView Parse(RequestHandlerModel model) =>
-            new RequestHandlerView(model.Request.FriendlyName(), model.Name);
+            new RequestHandlerView(model.Request.FriendlyName(), model.Request.HasDefaultConstructor(), model.Name);
 
         private IHandlerView Parse(RequestResponseHandlerModel model) =>
-            new RequestResponseHandlerView(model.Request.FriendlyName(), model.Name, model.Response.FriendlyName());
+            new RequestResponseHandlerView(model.Request.FriendlyName(), model.Request.HasDefaultConstructor(), model.Name, model.Response.FriendlyName());
 
         private IHandlerView Parse(SubscriptionHandlerModel model) =>
-            new SubscriptionHandlerView(model.Init.FriendlyName(), model.Name, model.Message.FriendlyName());
+            new SubscriptionHandlerView(model.Init.FriendlyName(), model.Init.HasDefaultConstructor(), model.Name, model.Message.FriendlyName());
 
         private IReadOnlyCollection<HandlerContainer> GetRawViews<T>(
             Namespace rootNs,

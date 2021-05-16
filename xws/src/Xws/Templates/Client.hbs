@@ -24,18 +24,54 @@ namespace {{ namespace }}
         {{~ end ~}}
         {{~ for handler in request_handlers ~}}
 
-        public Task<IStatusResult<OperationStatus>> {{ handler.request_name }}Async({{ handler.request_type }} request) =>
-            _client.SendAsync(request);
+        public Task<IStatusResult<OperationStatus>> {{ handler.request_name }}Async(
+            {{- if handler.request_type_nullable -}}
+                {{ handler.request_type }}? request = default
+            {{- else -}}
+                {{ handler.request_type }} request
+            {{- end -}}
+        ) =>
+            _client.SendAsync(
+                {{- if handler.request_type_nullable -}}
+                    request ?? new {{ handler.request_type }}()
+                {{- else -}}
+                    request
+                {{- end -}}
+            );
         {{~ end ~}}
         {{~ for handler in request_response_handlers ~}}
 
-        public Task<IStatusResult<OperationStatus, {{ handler.response_type }}>> {{ handler.request_name }}Async({{ handler.request_type }} request) =>
-            _client.FetchAsync<{{ handler.response_type }}>(request);
+        public Task<IStatusResult<OperationStatus, {{ handler.response_type }}>> {{ handler.request_name }}Async(
+            {{- if handler.request_type_nullable -}}
+                {{ handler.request_type }}? request = default
+            {{- else -}}
+                {{ handler.request_type }} request
+            {{- end -}}
+        ) =>
+            _client.FetchAsync<{{ handler.response_type }}>(
+                {{- if handler.request_type_nullable -}}
+                    request ?? new {{ handler.request_type }}()
+                {{- else -}}
+                    request
+                {{- end -}}
+            );
         {{~ end ~}}
         {{~ for handler in subscription_handlers ~}}
 
-        public IObservable<{{ handler.message_type }}> Listen{{ handler.init_name }}({{ handler.init_type }} init) =>
-            _client.Listen<{{ handler.init_type }}, {{ handler.message_type }}>(init);
+        public IObservable<{{ handler.message_type }}> Listen{{ handler.init_name }}(
+            {{- if handler.init_type_nullable -}}
+                {{ handler.init_type }}? init = default
+            {{- else -}}
+                {{ handler.init_type }} init
+            {{- end -}}
+        ) =>
+            _client.Listen<{{ handler.init_type }}, {{ handler.message_type }}>(
+                {{- if handler.init_type_nullable -}}
+                    init ?? new {{ handler.init_type }}()
+                {{- else -}}
+                    init
+                {{- end -}}
+            );
         {{~ end ~}}
     }
 }
