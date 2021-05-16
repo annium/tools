@@ -12,17 +12,27 @@ namespace {{ namespace }}
         {
             _client = client;
         }
-        {{~ for handler in broadcasters ~}}
+
+
+
+        {{- for handler in broadcasters }}
 
         public IObservable<{{ handler.message_type }}> Listen{{ handler.message_name }}() =>
             _client.Listen<{{ handler.message_type }}>();
-        {{~ end ~}}
-        {{~ for handler in event_handlers ~}}
+
+        {{- end }}
+
+
+
+        {{- for handler in event_handlers }}
 
         public void Notify{{ handler.message_name }}({{ handler.message_type }} ev) =>
             _client.Notify(ev);
-        {{~ end ~}}
-        {{~ for handler in request_handlers ~}}
+
+        {{- end }}
+
+
+        {{- for handler in request_handlers }}
 
         public Task<IStatusResult<OperationStatus>> {{ handler.request_name }}Async(
             {{- if handler.request_type_nullable -}}
@@ -38,8 +48,12 @@ namespace {{ namespace }}
                     request
                 {{- end -}}
             );
-        {{~ end ~}}
-        {{~ for handler in request_response_handlers ~}}
+
+        {{- end }}
+
+
+
+        {{- for handler in request_response_handlers }}
 
         public Task<IStatusResult<OperationStatus, {{ handler.response_type }}>> {{ handler.request_name }}Async(
             {{- if handler.request_type_nullable -}}
@@ -55,8 +69,12 @@ namespace {{ namespace }}
                     request
                 {{- end -}}
             );
-        {{~ end ~}}
-        {{~ for handler in subscription_handlers ~}}
+
+        {{- end }}
+
+
+
+        {{- for handler in subscription_handlers }}
 
         public IObservable<{{ handler.message_type }}> Listen{{ handler.init_name }}(
             {{- if handler.init_type_nullable -}}
@@ -72,6 +90,7 @@ namespace {{ namespace }}
                     init
                 {{- end -}}
             );
-        {{~ end ~}}
+
+        {{- end }}
     }
 }
