@@ -13,23 +13,15 @@ namespace {{ namespace }}
         {{~ end ~}}
         public bool IsConnected => _client.IsConnected;
         public event Func<Task> ConnectionLost = () => Task.CompletedTask;
-        public event Func<Task> ConnectionRestored = () => Task.CompletedTask;
-        private readonly IClient _client;
+        private readonly ITestClient _client;
 
-        public {{ type }}(IClient client)
+        public {{ type }}(ITestClient client)
         {
             {{~ for client in clients ~}}
             {{ client.name }} = new {{ client.type }}(client);
             {{~ end ~}}
             _client = client;
             _client.ConnectionLost += () => ConnectionLost.Invoke();
-            _client.ConnectionRestored += () => ConnectionRestored.Invoke();
         }
-
-        public Task ConnectAsync(CancellationToken ct = default) =>
-            _client.ConnectAsync(ct);
-
-        public Task DisconnectAsync() =>
-            _client.DisconnectAsync();
     }
 }

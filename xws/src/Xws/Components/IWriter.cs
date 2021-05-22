@@ -4,6 +4,6 @@ namespace Xws.Components
 {
     internal interface IWriter
     {
-        void Write(string output, ClientContainerView client);
+        void Write(string output, ApiView api);
     }
 }

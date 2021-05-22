@@ -4,19 +4,26 @@ namespace Xws.Views
 {
     internal class ApiView
     {
-        public IReadOnlyCollection<string> Usages { get; }
         public string Namespace { get; }
+        public IReadOnlyCollection<string> Usages { get; }
         public string Name { get; }
+        public ClientRootView Client { get; }
+        public ClientRootView TestClient { get; }
 
         public ApiView(
-            IReadOnlyCollection<string> usages,
             string ns,
-            string name
+            IReadOnlyCollection<string> usages,
+            string name,
+            ClientRootView client,
+            ClientRootView testClient
         )
+
         {
-            Usages = usages;
             Namespace = ns;
+            Usages = usages;
             Name = name;
+            Client = client;
+            TestClient = testClient;
         }
     }
 }

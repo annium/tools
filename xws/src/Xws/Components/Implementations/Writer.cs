@@ -17,25 +17,28 @@ namespace Xws.Components.Implementations
             _templateWriter = templateWriter;
         }
 
-        public void Write(string output, ClientContainerView client)
+        public void Write(string output, ApiView api)
         {
             if (!Directory.Exists(output))
                 Directory.CreateDirectory(output);
 
-            Write(output, "ServiceContainerExtensions", "Templates.ServiceContainerExtensions", new
-            {
-                Usages = new[]
-                {
-                    "System",
-                    "Annium.Core.DependencyInjection",
-                    "Annium.Infrastructure.WebSockets.Client",
-                    client.Namespace
-                }.OrderNamespaces(),
-                Namespace = Namespace.New(client.Namespace).Pop().ToNamespaceString(),
-                client.Name
-            });
+            Write(output, "ServiceContainerExtensions", "Templates.ServiceContainerExtensions", api);
 
-            WriteClientContainer(output, client.Namespace.ToNamespace().Pop(), client, true);
+            WriteClientRoot(output, api);
+        }
+
+        private void WriteClientRoot(string rootDir, ApiView api)
+        {
+            var rootNs = api.Namespace.ToNamespace();
+            var output = GetOutputPath(rootDir, rootNs, api.Client.Namespace.ToNamespace());
+            if (!Directory.Exists(output))
+                Directory.CreateDirectory(output);
+
+            Write(output, api.Client.Type, "Templates.ClientRoot", api.Client);
+            Write(output, api.TestClient.Type, "Templates.TestClientRoot", api.TestClient);
+
+            foreach (var client in api.Client.Clients)
+                WriteAbstractClient(rootDir, rootNs, client);
         }
 
         private void WriteAbstractClient(string rootDir, Namespace rootNs, IClientView abstraction)

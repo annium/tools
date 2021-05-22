@@ -6,7 +6,10 @@ namespace {{ namespace }}
 {
     public static class {{ name }}ClientServiceContainerExtensions
     {
-        public static IServiceContainer Add{{ name }}Client(this IServiceContainer container, Action<ClientConfiguration> configure)
+        public static IServiceContainer Add{{ name }}Client(
+            this IServiceContainer container,
+            Action<ClientConfiguration> configure
+        )
         {
             // client
             container.Add(sp =>
@@ -15,9 +18,31 @@ namespace {{ namespace }}
                 configure(configuration);
 
                 var factory = sp.Resolve<IClientFactory>();
-                var clientBase = factory.Create(configuration);
+                var client = factory.Create(configuration);
 
-                return new {{ name }}Client(clientBase);
+                return new {{ name }}Client(client);
+            }).AsSelf().Singleton();
+
+            // system
+            container.AddWebSocketClient();
+
+            return container;
+        }
+
+        public static IServiceContainer Add{{ name }}TestClient(
+            this IServiceContainer container,
+            Action<TestClientConfiguration>? configure = default
+        )
+        {
+            // test client
+            container.Add<Func<WebSocket, {{ name }}TestClient>>(sp =>
+            {
+                var configuration = new TestClientConfiguration();
+                configure?.Invoke(configuration);
+
+                var factory = sp.Resolve<ITestClientFactory>();
+
+                return socket => new {{ name }}TestClient(factory.Create(socket, configuration));
             }).AsSelf().Singleton();
 
             // system

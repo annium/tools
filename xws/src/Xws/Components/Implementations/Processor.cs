@@ -11,12 +11,11 @@ namespace Xws.Components.Implementations
 {
     internal class Processor : IProcessor
     {
-        private static readonly Namespace AnniumNetHttp = Namespace.New("Annium.Net.Http");
         private const string Clients = "Clients";
         private const string Client = "Client";
         private const string Root = "Root";
 
-        public ClientContainerView Process(Namespace rootNs, ApiModel api)
+        public ApiView Process(Namespace rootNs, ApiModel api)
         {
             var ns = rootNs.Append(Clients).ToNamespace();
             var candidates = BuildClientCandidates(
@@ -27,7 +26,7 @@ namespace Xws.Components.Implementations
                 GetRawViews(ns, api.SubscriptionHandlers, Parse)
             );
 
-            return BuildClientNode(ns, api.Project, $"{api.Project}{Client}", candidates, true);
+            return BuildApiNode(ns, api.Project, $"{api.Project}{Client}", $"{api.Project}Test{Client}", candidates);
         }
 
         private IHandlerView Parse(BroadcasterModel model) =>
@@ -104,12 +103,55 @@ namespace Xws.Components.Implementations
             })
             .ToArray();
 
+        private ApiView BuildApiNode(
+            Namespace ns,
+            string name,
+            string type,
+            string testType,
+            IReadOnlyCollection<ClientCandidate> candidates
+        )
+        {
+            var node = BuildClientNode(ns, string.Empty, type, candidates);
+
+            var apiNs = Namespace.New(node.Namespace).Pop().ToNamespaceString();
+            var apiUsages = new[]
+            {
+                "System",
+                "System.Net.WebSockets",
+                "Annium.Core.DependencyInjection",
+                "Annium.Infrastructure.WebSockets.Client",
+                node.Namespace
+            }.OrderNamespaces().ToArray();
+
+            var clientUsages = node.Usages
+                .Concat(new[]
+                {
+                    "System",
+                    "System.Threading",
+                    "System.Threading.Tasks"
+                })
+                .OrderNamespaces()
+                .ToArray();
+            var clientRoot = new ClientRootView(node.Namespace, clientUsages, type, node.Clients);
+
+            var testClientUsages = node.Usages
+                .Concat(new[]
+                {
+                    "System",
+                    "System.Threading.Tasks"
+                })
+                .OrderNamespaces()
+                .ToArray();
+            var testClientRoot = new ClientRootView(node.Namespace, testClientUsages, testType, node.Clients);
+
+            return new ApiView(apiNs, apiUsages, name, clientRoot, testClientRoot);
+        }
+
         private ClientContainerView BuildClientNode(
             Namespace ns,
             string name,
             string type,
-            IReadOnlyCollection<ClientCandidate> candidates,
-            bool root = false
+            IReadOnlyCollection<ClientCandidate> candidates
         )
         {
             if (candidates.Count == 0)
@@ -117,7 +159,7 @@ namespace Xws.Components.Implementations
 
             if (candidates.Count == 1)
                 return new ClientContainerView(
-                    new[] {candidates.First().Namespace}
+                    new[] { candidates.First().Namespace }
                         .ToUsagesFrom(ns)
                         .ToUsageStrings()
                         .Append("Annium.Infrastructure.WebSockets.Client")
@@ -140,18 +182,10 @@ namespace Xws.Components.Implementations
                     x => BuildClientNode(x.Key, x.Key.Last(), $"{x.Key.Last()}{Root}", x.ToArray())
                 );
 
-            var clientUsages = root
-                ? new[]
-                {
-                    "System",
-                    "Annium.Infrastructure.WebSockets.Client",
-                    "System.Threading",
-                    "System.Threading.Tasks",
-                }
-                : new[]
-                {
-                    "Annium.Infrastructure.WebSockets.Client",
-                };
+            var clientUsages = new[]
+            {
+                "Annium.Infrastructure.WebSockets.Client",
+            };
 
             var usages = children
                 .Select(x => x.Namespace)
