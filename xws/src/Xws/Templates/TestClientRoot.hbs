@@ -6,7 +6,7 @@ using {{ ns }};
 {{~ end ~}}
 namespace {{ namespace }}
 {
-    public class {{ type }}
+    public class {{ type }}: IAsyncDisposable
     {
         {{~ for client in clients ~}}
         public {{ client.type }} {{ client.name }} { get; }
@@ -23,5 +23,7 @@ namespace {{ namespace }}
             _client = client;
             _client.ConnectionLost += () => ConnectionLost.Invoke();
         }
+
+        public ValueTask DisposeAsync() => _client.DisposeAsync();
     }
 }
