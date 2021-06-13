@@ -6,11 +6,11 @@ using Xws.Models;
 
 namespace Xws.Components.Implementations
 {
-    internal class Loader : ILoader
+    internal class Loader : ILoader, ILogSubject
     {
+        public ILogger Logger { get; }
         private readonly IAssemblyLoaderBuilder _assemblyLoaderBuilder;
         private readonly IParser _parser;
-        private readonly ILogger<Loader> _logger;
 
         public Loader(
             IAssemblyLoaderBuilder assemblyLoaderBuilder,
@@ -20,7 +20,7 @@ namespace Xws.Components.Implementations
         {
             _assemblyLoaderBuilder = assemblyLoaderBuilder;
             _parser = parser;
-            _logger = logger;
+            Logger = logger;
         }
 
         public ApiModel Load(string assemblyPath, string projectName)
@@ -31,13 +31,13 @@ namespace Xws.Components.Implementations
             var loader = _assemblyLoaderBuilder.UseFileSystemLoader(Path.GetDirectoryName(assemblyPath)!).Build();
             var name = Path.GetFileNameWithoutExtension(assemblyPath);
 
-            _logger.Info($"load assembly {name}");
+            this.Info($"load assembly {name}");
             var assembly = loader.Load(name);
-            _logger.Info($"get assembly {name} TypeManager");
+            this.Info($"get assembly {name} TypeManager");
             var tm = TypeManager.GetInstance(assembly, false);
-            _logger.Info($"parse assembly {name} model");
+            this.Info($"parse assembly {name} model");
             var model = _parser.Parse(assembly, projectName, tm);
-            _logger.Info($"parsed assembly {name}");
+            this.Info($"parsed assembly {name}");
 
             return model;
         }
