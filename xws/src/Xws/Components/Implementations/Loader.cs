@@ -31,13 +31,13 @@ namespace Xws.Components.Implementations
             var loader = _assemblyLoaderBuilder.UseFileSystemLoader(Path.GetDirectoryName(assemblyPath)!).Build();
             var name = Path.GetFileNameWithoutExtension(assemblyPath);
 
-            this.Info($"load assembly {name}");
+            this.Log().Info($"load assembly {name}");
             var assembly = loader.Load(name);
-            this.Info($"get assembly {name} TypeManager");
+            this.Log().Info($"get assembly {name} TypeManager");
             var tm = TypeManager.GetInstance(assembly, false);
-            this.Info($"parse assembly {name} model");
+            this.Log().Info($"parse assembly {name} model");
             var model = _parser.Parse(assembly, projectName, tm);
-            this.Info($"parsed assembly {name}");
+            this.Log().Info($"parsed assembly {name}");
 
             return model;
         }
