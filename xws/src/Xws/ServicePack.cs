@@ -19,19 +19,11 @@ namespace Xws
             container.AddLogging(route => route.UseConsole());
             container.AddMapper();
 
-            RegisterCommands(container);
-
             container.Add<ILoader, Loader>().Singleton();
             container.Add<IParser, Parser>().Singleton();
             container.Add<IProcessor, Processor>().Singleton();
             container.Add<ITemplateWriter, TemplateWriter>().Singleton();
             container.Add<IWriter, Writer>().Singleton();
-        }
-
-        private void RegisterCommands(IServiceContainer container)
-        {
-            container.Add<Commands.Group>().AsSelf().Singleton();
-            container.Add<Commands.GenerateCommand>().AsSelf().Singleton();
         }
     }
 }
