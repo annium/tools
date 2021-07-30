@@ -35,19 +35,15 @@ namespace {{ namespace }}
         {{- for handler in request_handlers }}
 
         public Task<IStatusResult<OperationStatus>> {{ handler.request_name }}Async(
-            {{- if handler.request_type_nullable -}}
-                {{ handler.request_type }}? request = default
-            {{- else -}}
-                {{ handler.request_type }} request
-            {{- end -}}
-        ) =>
-            _client.SendAsync(
-                {{- if handler.request_type_nullable -}}
-                    request ?? new {{ handler.request_type }}()
-                {{- else -}}
-                    request
-                {{- end -}}
-            );
+            {{ handler.request_type }} request,
+            CancellationToken ct = default
+        ) => _client.SendAsync(request, ct);
+        {{~ if handler.request_type_nullable ~}}
+
+        public Task<IStatusResult<OperationStatus>> {{ handler.request_name }}Async(
+            CancellationToken ct = default
+        ) => _client.SendAsync(new {{ handler.request_type }}(), ct);
+        {{- end -}}
 
         {{- end }}
 
@@ -56,19 +52,26 @@ namespace {{ namespace }}
         {{- for handler in request_response_handlers }}
 
         public Task<IStatusResult<OperationStatus, {{ handler.response_type }}>> {{ handler.request_name }}Async(
-            {{- if handler.request_type_nullable -}}
-                {{ handler.request_type }}? request = default
-            {{- else -}}
-                {{ handler.request_type }} request
-            {{- end -}}
-        ) =>
-            _client.FetchAsync<{{ handler.response_type }}>(
-                {{- if handler.request_type_nullable -}}
-                    request ?? new {{ handler.request_type }}()
-                {{- else -}}
-                    request
-                {{- end -}}
-            );
+            {{ handler.request_type }} request,
+            CancellationToken ct = default
+        ) => _client.FetchAsync<{{ handler.response_type }}>(request, ct);
+
+        public Task<IStatusResult<OperationStatus, {{ handler.response_type }}>> {{ handler.request_name }}Async(
+            {{ handler.request_type }} request,
+            {{ handler.response_type }} defaultValue,
+            CancellationToken ct = default
+        ) => _client.FetchAsync<{{ handler.response_type }}>(request, defaultValue, ct);
+        {{~ if handler.request_type_nullable ~}}
+
+        public Task<IStatusResult<OperationStatus, {{ handler.response_type }}>> {{ handler.request_name }}Async(
+            CancellationToken ct = default
+        ) => _client.FetchAsync<{{ handler.response_type }}>(new {{ handler.request_type }}(), ct);
+
+        public Task<IStatusResult<OperationStatus, {{ handler.response_type }}>> {{ handler.request_name }}Async(
+            {{ handler.response_type }} defaultValue,
+            CancellationToken ct = default
+        ) => _client.FetchAsync<{{ handler.response_type }}>(new {{ handler.request_type }}(), defaultValue, ct);
+        {{- end -}}
 
         {{- end }}
 
@@ -76,20 +79,18 @@ namespace {{ namespace }}
 
         {{- for handler in subscription_handlers }}
 
-        public IObservable<{{ handler.message_type }}> Listen{{ handler.init_name }}(
-            {{- if handler.init_type_nullable -}}
-                {{ handler.init_type }}? init = default
-            {{- else -}}
-                {{ handler.init_type }} init
-            {{- end -}}
+        public Task<IStatusResult<OperationStatus, IObservable<{{ handler.message_type }}>>> Subscribe{{ handler.init_name }}Async(
+            {{ handler.init_type }} init,
+            CancellationToken ct
         ) =>
-            _client.Listen<{{ handler.init_type }}, {{ handler.message_type }}>(
-                {{- if handler.init_type_nullable -}}
-                    init ?? new {{ handler.init_type }}()
-                {{- else -}}
-                    init
-                {{- end -}}
-            );
+            _client.SubscribeAsync<{{ handler.init_type }}, {{ handler.message_type }}>(init, ct);
+        {{~ if handler.init_type_nullable ~}}
+
+        public Task<IStatusResult<OperationStatus, IObservable<{{ handler.message_type }}>>> Subscribe{{ handler.init_name }}Async(
+            CancellationToken ct
+        ) =>
+            _client.SubscribeAsync<{{ handler.init_type }}, {{ handler.message_type }}>(new {{ handler.init_type }}(), ct);
+        {{- end -}}
 
         {{- end }}
     }

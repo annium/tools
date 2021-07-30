@@ -1,4 +1,8 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Annium.Architecture.Base;
+using Annium.Data.Operations;
 
 namespace Xws.Models
 {
@@ -10,7 +14,13 @@ namespace Xws.Models
         public Type[] References => new[]
         {
             Init,
-            typeof(IObservable<>).MakeGenericType(Message)
+            typeof(CancellationToken),
+            typeof(Task<>).MakeGenericType(
+                typeof(IStatusResult<,>).MakeGenericType(
+                    typeof(OperationStatus),
+                    typeof(IObservable<>).MakeGenericType(Message)
+                )
+            )
         };
 
         public Type Init { get; }
