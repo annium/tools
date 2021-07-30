@@ -17,8 +17,8 @@ namespace {{ namespace }}
 
         {{- for handler in broadcasters }}
 
-        public IObservable<{{ handler.message_type }}> Listen{{ handler.message_name }}() =>
-            _client.Listen<{{ handler.message_type }}>();
+        public IObservable<{{ handler.message_type }}> Listen{{ handler.message_name }}()
+            => _client.Listen<{{ handler.message_type }}>();
 
         {{- end }}
 
@@ -26,8 +26,8 @@ namespace {{ namespace }}
 
         {{- for handler in event_handlers }}
 
-        public void Notify{{ handler.message_name }}({{ handler.message_type }} ev) =>
-            _client.Notify(ev);
+        public void Notify{{ handler.message_name }}({{ handler.message_type }} ev)
+            => _client.Notify(ev);
 
         {{- end }}
 
@@ -79,17 +79,15 @@ namespace {{ namespace }}
 
         {{- for handler in subscription_handlers }}
 
-        public Task<IStatusResult<OperationStatus, IObservable<{{ handler.message_type }}>>> Subscribe{{ handler.init_name }}Async(
+        public Task<IStatusResult<OperationStatus, IAsyncDisposableObservable<{{ handler.message_type }}>>> Subscribe{{ handler.init_name }}Async(
             {{ handler.init_type }} init,
-            CancellationToken ct
-        ) =>
-            _client.SubscribeAsync<{{ handler.init_type }}, {{ handler.message_type }}>(init, ct);
+            CancellationToken ct = default
+        ) => _client.SubscribeAsync<{{ handler.init_type }}, {{ handler.message_type }}>(init, ct);
         {{~ if handler.init_type_nullable ~}}
 
-        public Task<IStatusResult<OperationStatus, IObservable<{{ handler.message_type }}>>> Subscribe{{ handler.init_name }}Async(
-            CancellationToken ct
-        ) =>
-            _client.SubscribeAsync<{{ handler.init_type }}, {{ handler.message_type }}>(new {{ handler.init_type }}(), ct);
+        public Task<IStatusResult<OperationStatus, IAsyncDisposableObservable<{{ handler.message_type }}>>> Subscribe{{ handler.init_name }}Async(
+            CancellationToken ct = default
+        ) => _client.SubscribeAsync<{{ handler.init_type }}, {{ handler.message_type }}>(new {{ handler.init_type }}(), ct);
         {{- end -}}
 
         {{- end }}

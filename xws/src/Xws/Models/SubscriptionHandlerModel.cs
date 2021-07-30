@@ -18,7 +18,7 @@ namespace Xws.Models
             typeof(Task<>).MakeGenericType(
                 typeof(IStatusResult<,>).MakeGenericType(
                     typeof(OperationStatus),
-                    typeof(IObservable<>).MakeGenericType(Message)
+                    typeof(IAsyncDisposableObservable<>).MakeGenericType(Message)
                 )
             )
         };
