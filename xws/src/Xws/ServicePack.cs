@@ -11,7 +11,7 @@ namespace Xws
         {
             // can't understand that, but preloading assemblies speeds up process greatly, comparing to loading via AssemblyLoadContext
             container.AddRuntimeTools(GetType().Assembly, true);
-            container.AddTimeProvider();
+            container.AddTime().WithRealTime().SetDefault();
             container.AddJsonSerializers();
             container.AddAssemblyLoader();
             container.AddResourceLoader();
