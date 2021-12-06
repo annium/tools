@@ -1,11 +1,10 @@
 using System;
 
-namespace Xws.Models
+namespace Xws.Models;
+
+public interface IHandlerModel
 {
-    public interface IHandlerModel
-    {
-        Namespace Namespace { get; }
-        string Name { get; }
-        Type[] References { get; }
-    }
+    Namespace Namespace { get; }
+    string Name { get; }
+    Type[] References { get; }
 }

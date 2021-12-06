@@ -1,7 +1,6 @@
-namespace Xws.Views
-{
-    internal interface IHandlerView
-    {
+namespace Xws.Views;
 
-    }
+internal interface IHandlerView
+{
+
 }

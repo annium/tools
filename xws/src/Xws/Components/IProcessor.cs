@@ -1,10 +1,9 @@
 using Xws.Models;
 using Xws.Views;
 
-namespace Xws.Components
+namespace Xws.Components;
+
+internal interface IProcessor
 {
-    internal interface IProcessor
-    {
-        ApiView Process(Namespace ns, ApiModel api);
-    }
+    ApiView Process(Namespace ns, ApiModel api);
 }
