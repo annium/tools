@@ -16,7 +16,7 @@ internal class ServicePack : ServicePackBase
         container.AddAssemblyLoader();
         container.AddResourceLoader();
         container.AddArguments();
-        container.AddLogging(route => route.UseConsole());
+        container.AddLogging();
         container.AddMapper();
 
         container.Add<ILoader, Loader>().Singleton();
@@ -24,5 +24,10 @@ internal class ServicePack : ServicePackBase
         container.Add<IProcessor, Processor>().Singleton();
         container.Add<ITemplateWriter, TemplateWriter>().Singleton();
         container.Add<IWriter, Writer>().Singleton();
+    }
+
+    public override void Setup(IServiceProvider provider)
+    {
+        provider.UseLogging(route => route.UseConsole());
     }
 }
