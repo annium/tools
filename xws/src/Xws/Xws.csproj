@@ -24,7 +24,7 @@
         <PackageReference Include="Annium.Infrastructure.WebSockets.Server" Version="0.1.0" />
         <PackageReference Include="Annium.Logging.Console" Version="0.1.0" />
         <PackageReference Include="Annium.Serialization.Json" Version="0.1.0" />
-        <PackageReference Include="Scriban" Version="5.0.0" />
+        <PackageReference Include="Scriban" Version="5.4.4" />
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Include="Templates/**" />
