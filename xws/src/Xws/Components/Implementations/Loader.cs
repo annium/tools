@@ -34,7 +34,7 @@ internal class Loader : ILoader, ILogSubject
         this.Log().Info($"load assembly {name}");
         var assembly = loader.Load(name);
         this.Log().Info($"get assembly {name} TypeManager");
-        var tm = TypeManager.GetInstance(assembly, false);
+        var tm = TypeManager.GetInstance(assembly);
         this.Log().Info($"parse assembly {name} model");
         var model = _parser.Parse(assembly, projectName, tm);
         this.Log().Info($"parsed assembly {name}");
