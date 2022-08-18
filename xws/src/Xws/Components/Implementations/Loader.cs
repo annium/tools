@@ -6,9 +6,9 @@ using Xws.Models;
 
 namespace Xws.Components.Implementations;
 
-internal class Loader : ILoader, ILogSubject
+internal class Loader : ILoader, ILogSubject<Loader>
 {
-    public ILogger Logger { get; }
+    public ILogger<Loader> Logger { get; }
     private readonly IAssemblyLoaderBuilder _assemblyLoaderBuilder;
     private readonly IParser _parser;
 
