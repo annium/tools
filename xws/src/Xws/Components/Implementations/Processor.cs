@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Annium.Core.Primitives;
+using Annium;
 using Annium.Core.Reflection;
 using Xws.Extensions;
 using Xws.Models;
