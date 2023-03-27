@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Annium;
-using Annium.Core.Reflection;
+using Annium.Reflection;
 using Xws.Extensions;
 using Xws.Models;
 using Xws.Views;
