@@ -1,10 +1,12 @@
+using Annium.Extensions.Arguments;
+
 namespace Xws.Commands;
 
-public class Group : Annium.Extensions.Arguments.Group
+public class Group : Annium.Extensions.Arguments.Group, ICommandDescriptor
 {
-    public override string Id { get; } = "";
+    public static string Id => "";
 
-    public override string Description { get; } = "WebSockets tool";
+    public static string Description => "WebSockets tool";
 
     public Group()
     {

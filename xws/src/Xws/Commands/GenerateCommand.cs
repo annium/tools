@@ -7,10 +7,10 @@ using Xws.Models;
 
 namespace Xws.Commands;
 
-internal class GenerateCommand : Command<GenerateCommandConfiguration>, ILogSubject<GenerateCommand>
+internal class GenerateCommand : Command<GenerateCommandConfiguration>, ICommandDescriptor, ILogSubject<GenerateCommand>
 {
-    public override string Id { get; } = "gen";
-    public override string Description { get; } = "generate client";
+    public static string Id => "gen";
+    public static string Description => "generate client";
     public ILogger<GenerateCommand> Logger { get; }
     private readonly ILoader _loader;
     private readonly IProcessor _processor;
