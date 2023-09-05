@@ -168,7 +168,7 @@ internal class Processor : IProcessor
                 ns.ToString(),
                 name,
                 type,
-                candidates.Select(x => (ClientView) x).ToArray()
+                candidates.Select(x => (ClientView)x).ToArray()
             );
 
         var lookup = candidates.ToLookup(x => x.Namespace == ns);
@@ -200,7 +200,7 @@ internal class Processor : IProcessor
             .OrderBy(x => x.Namespace.ToString())
             .ThenBy(x => x.Name)
             .Concat<IClientView>(children
-                .Select(x => (ClientView) x)
+                .Select(x => (ClientView)x)
                 .OrderBy(x => x.Namespace)
                 .ThenBy(x => x.Name)
             )
