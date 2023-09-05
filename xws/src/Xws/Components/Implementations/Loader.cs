@@ -1,21 +1,21 @@
 using System.IO;
 using Annium.Core.Runtime.Loader;
 using Annium.Core.Runtime.Types;
-using Annium.Logging.Abstractions;
+using Annium.Logging;
 using Xws.Models;
 
 namespace Xws.Components.Implementations;
 
-internal class Loader : ILoader, ILogSubject<Loader>
+internal class Loader : ILoader, ILogSubject
 {
-    public ILogger<Loader> Logger { get; }
+    public ILogger Logger { get; }
     private readonly IAssemblyLoaderBuilder _assemblyLoaderBuilder;
     private readonly IParser _parser;
 
     public Loader(
         IAssemblyLoaderBuilder assemblyLoaderBuilder,
         IParser parser,
-        ILogger<Loader> logger
+        ILogger logger
     )
     {
         _assemblyLoaderBuilder = assemblyLoaderBuilder;
@@ -31,13 +31,13 @@ internal class Loader : ILoader, ILogSubject<Loader>
         var loader = _assemblyLoaderBuilder.UseFileSystemLoader(Path.GetDirectoryName(assemblyPath)!).Build();
         var name = Path.GetFileNameWithoutExtension(assemblyPath);
 
-        this.Log().Info($"load assembly {name}");
+        this.Info($"load assembly {name}");
         var assembly = loader.Load(name);
-        this.Log().Info($"get assembly {name} TypeManager");
-        var tm = TypeManager.GetInstance(assembly);
-        this.Log().Info($"parse assembly {name} model");
+        this.Info($"get assembly {name} TypeManager");
+        var tm = TypeManager.GetInstance(assembly, VoidLogger.Instance);
+        this.Info($"parse assembly {name} model");
         var model = _parser.Parse(assembly, projectName, tm);
-        this.Log().Info($"parsed assembly {name}");
+        this.Info($"parsed assembly {name}");
 
         return model;
     }
