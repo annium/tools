@@ -14,15 +14,11 @@
         <ToolCommandName>xws</ToolCommandName>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Annium" Version="0.1.0" />
-        <PackageReference Include="Annium.Core.DependencyInjection" Version="0.1.0" />
         <PackageReference Include="Annium.Core.Entrypoint" Version="0.1.0" />
-        <PackageReference Include="Annium.Core.Runtime" Version="0.1.0" />
         <PackageReference Include="Annium.Core.Runtime.Loader" Version="0.1.0" />
         <PackageReference Include="Annium.Extensions.Arguments" Version="0.1.0" />
         <PackageReference Include="Annium.Infrastructure.WebSockets.Server" Version="0.1.0" />
         <PackageReference Include="Annium.Logging.Console" Version="0.1.0" />
-        <PackageReference Include="Annium.Serialization.Json" Version="0.1.0" />
         <PackageReference Include="Scriban" Version="5.7.0" />
     </ItemGroup>
     <ItemGroup>
