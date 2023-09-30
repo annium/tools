@@ -17,8 +17,8 @@
         <PackageReference Include="Annium.Core.Entrypoint" Version="0.1.0" />
         <PackageReference Include="Annium.Core.Runtime.Loader" Version="0.1.0" />
         <PackageReference Include="Annium.Extensions.Arguments" Version="0.1.0" />
-        <PackageReference Include="Annium.Mesh.Server" Version="0.1.0" />
         <PackageReference Include="Annium.Logging.Console" Version="0.1.0" />
+        <PackageReference Include="Annium.Mesh.Server" Version="0.1.0" />
         <PackageReference Include="Scriban" Version="5.9.0" />
     </ItemGroup>
     <ItemGroup>
