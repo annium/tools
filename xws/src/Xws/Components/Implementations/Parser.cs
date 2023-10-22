@@ -20,10 +20,10 @@ internal class Parser : IParser
     public ApiModel Parse(Assembly assembly, string name, ITypeManager tm)
     {
         var broadcasters = GetRawModels(tm, typeof(IBroadcaster<>)).Select(ParseBroadcaster).ToArray();
-        var eventHandlers = GetRawModels(tm, typeof(IEventHandler<,>)).Select(ParseEventHandler).ToArray();
+        var eventHandlers = GetRawModels(tm, typeof(IEventHandler<>)).Select(ParseEventHandler).ToArray();
         var requestHandlers = GetRawModels(tm, typeof(IRequestHandler<,>)).Select(ParseRequestHandler).ToArray();
         var requestResponseHandlers = GetRawModels(tm, typeof(IRequestResponseHandler<,,>)).Select(ParseRequestResponseHandler).ToArray();
-        var subscriptionHandlers = GetRawModels(tm, typeof(ISubscriptionHandler<,,>)).Select(ParseSubscriptionHandler).ToArray();
+        var subscriptionHandlers = GetRawModels(tm, typeof(ISubscriptionHandler<,>)).Select(ParseSubscriptionHandler).ToArray();
 
         return new ApiModel(
             assembly,
