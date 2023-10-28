@@ -29,8 +29,7 @@ internal class Processor : IProcessor
         return BuildApiNode(ns, api.Project, $"{api.Project}{Client}", $"{api.Project}Test{Client}", candidates);
     }
 
-    private IHandlerView Parse(BroadcasterModel model) =>
-        new BroadcasterView(model.Message.FriendlyName(), model.Name);
+    private IHandlerView Parse(BroadcasterModel model) => new BroadcasterView(model.Message.FriendlyName(), model.Name);
 
     private IHandlerView Parse(EventHandlerModel model) =>
         new EventHandlerView(model.Message.FriendlyName(), model.Name);
@@ -39,10 +38,20 @@ internal class Processor : IProcessor
         new RequestHandlerView(model.Request.FriendlyName(), model.Request.HasDefaultConstructor(), model.Name);
 
     private IHandlerView Parse(RequestResponseHandlerModel model) =>
-        new RequestResponseHandlerView(model.Request.FriendlyName(), model.Request.HasDefaultConstructor(), model.Name, model.Response.FriendlyName());
+        new RequestResponseHandlerView(
+            model.Request.FriendlyName(),
+            model.Request.HasDefaultConstructor(),
+            model.Name,
+            model.Response.FriendlyName()
+        );
 
     private IHandlerView Parse(SubscriptionHandlerModel model) =>
-        new SubscriptionHandlerView(model.Init.FriendlyName(), model.Init.HasDefaultConstructor(), model.Name, model.Message.FriendlyName());
+        new SubscriptionHandlerView(
+            model.Init.FriendlyName(),
+            model.Init.HasDefaultConstructor(),
+            model.Name,
+            model.Message.FriendlyName()
+        );
 
     private IReadOnlyCollection<HandlerContainer> GetRawViews<T>(
         Namespace rootNs,
@@ -87,21 +96,22 @@ internal class Processor : IProcessor
 
     private IReadOnlyCollection<ClientCandidate> BuildClientCandidates(
         params IReadOnlyCollection<HandlerContainer>[] containers
-    ) => containers
-        .SelectMany(x => x)
-        .GroupBy(x => x.Namespace)
-        .Select(x =>
-        {
-            var ns = x.Key.Pop();
-            var usages = x.SelectMany(y => y.Usages)
-                .Append(Namespace.New("Annium.Infrastructure.WebSockets.Client"))
-                .ToUsagesFrom(ns);
-            var name = x.Key.Last;
-            var handlers = x.Select(y => y.View).ToArray();
+    ) =>
+        containers
+            .SelectMany(x => x)
+            .GroupBy(x => x.Namespace)
+            .Select(x =>
+            {
+                var ns = x.Key.Pop();
+                var usages = x.SelectMany(y => y.Usages)
+                    .Append(Namespace.New("Annium.Infrastructure.WebSockets.Client"))
+                    .ToUsagesFrom(ns);
+                var name = x.Key.Last;
+                var handlers = x.Select(y => y.View).ToArray();
 
-            return new ClientCandidate(usages, ns, name, $"{name}{Client}", handlers);
-        })
-        .ToArray();
+                return new ClientCandidate(usages, ns, name, $"{name}{Client}", handlers);
+            })
+            .ToArray();
 
     private ApiView BuildApiNode(
         Namespace ns,
@@ -121,25 +131,18 @@ internal class Processor : IProcessor
             "Annium.Core.DependencyInjection",
             "Annium.Infrastructure.WebSockets.Client",
             node.Namespace
-        }.OrderNamespaces().ToArray();
+        }
+            .OrderNamespaces()
+            .ToArray();
 
         var clientUsages = node.Usages
-            .Concat(new[]
-            {
-                "System",
-                "System.Threading",
-                "System.Threading.Tasks"
-            })
+            .Concat(new[] { "System", "System.Threading", "System.Threading.Tasks" })
             .OrderNamespaces()
             .ToArray();
         var clientRoot = new ClientRootView(node.Namespace, clientUsages, type, node.Clients);
 
         var testClientUsages = node.Usages
-            .Concat(new[]
-            {
-                "System",
-                "System.Threading.Tasks"
-            })
+            .Concat(new[] { "System", "System.Threading.Tasks" })
             .OrderNamespaces()
             .ToArray();
         var testClientRoot = new ClientRootView(node.Namespace, testClientUsages, testType, node.Clients);
@@ -177,15 +180,9 @@ internal class Processor : IProcessor
 
         var ancestors = lookup[false]
             .GroupBy(x => ns.Append(x.Namespace.From(ns).First()).ToNamespace())
-            .ToDictionary(
-                x => x.Key,
-                x => BuildClientNode(x.Key, x.Key.Last(), $"{x.Key.Last()}{Root}", x.ToArray())
-            );
+            .ToDictionary(x => x.Key, x => BuildClientNode(x.Key, x.Key.Last(), $"{x.Key.Last()}{Root}", x.ToArray()));
 
-        var clientUsages = new[]
-        {
-            "Annium.Infrastructure.WebSockets.Client",
-        };
+        var clientUsages = new[] { "Annium.Infrastructure.WebSockets.Client", };
 
         var usages = children
             .Select(x => x.Namespace)
@@ -199,11 +196,7 @@ internal class Processor : IProcessor
         var clients = ancestors.Values
             .OrderBy(x => x.Namespace.ToString())
             .ThenBy(x => x.Name)
-            .Concat<IClientView>(children
-                .Select(x => (ClientView)x)
-                .OrderBy(x => x.Namespace)
-                .ThenBy(x => x.Name)
-            )
+            .Concat<IClientView>(children.Select(x => (ClientView)x).OrderBy(x => x.Namespace).ThenBy(x => x.Name))
             .ToArray();
 
         return new ClientContainerView(usages, ns.ToString(), name, type, clients);

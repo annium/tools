@@ -11,20 +11,12 @@ public class RequestHandlerModel : IHandlerModel
     public Namespace Namespace { get; }
     public string Name { get; }
 
-    public Type[] References => new[]
-    {
-        typeof(Task<IStatusResult<OperationStatus>>),
-        typeof(CancellationToken),
-        Request
-    };
+    public Type[] References =>
+        new[] { typeof(Task<IStatusResult<OperationStatus>>), typeof(CancellationToken), Request };
 
     public Type Request { get; }
 
-    public RequestHandlerModel(
-        Namespace @namespace,
-        string name,
-        Type request
-    )
+    public RequestHandlerModel(Namespace @namespace, string name, Type request)
     {
         Namespace = @namespace;
         Name = name;

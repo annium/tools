@@ -8,6 +8,7 @@ namespace Xws.Extensions;
 public static class NamespaceExtensions
 {
     public static Namespace ToNamespace(this string ns) => Namespace.New(ns);
+
     public static Namespace ToNamespace(this IEnumerable<string> ns) => Namespace.New(ns);
 
     public static string[] ToNamespaceArray(this string ns)
@@ -38,26 +39,14 @@ public static class NamespaceExtensions
     public static IReadOnlyCollection<Namespace> ToUsagesFrom(
         this IEnumerable<Namespace> references,
         Namespace target
-    ) => references
-        .ToArray()
-        .Where(x => !target.StartsWith(x))
-        .Distinct()
-        .OrderNamespaces()
-        .ToArray();
+    ) => references.ToArray().Where(x => !target.StartsWith(x)).Distinct().OrderNamespaces().ToArray();
 
-    public static IEnumerable<Namespace> OrderNamespaces(
-        this IEnumerable<Namespace> namespaces
-    ) => namespaces
-        .OrderBy(x => x.FirstOrDefault() != "System").ThenBy(x => x.ToString());
+    public static IEnumerable<Namespace> OrderNamespaces(this IEnumerable<Namespace> namespaces) =>
+        namespaces.OrderBy(x => x.FirstOrDefault() != "System").ThenBy(x => x.ToString());
 
-    public static IEnumerable<string> OrderNamespaces(
-        this IEnumerable<string> namespaces
-    ) => namespaces
-        .OrderBy(x => !x.StartsWith("System")).ThenBy(x => x.ToString());
+    public static IEnumerable<string> OrderNamespaces(this IEnumerable<string> namespaces) =>
+        namespaces.OrderBy(x => !x.StartsWith("System")).ThenBy(x => x.ToString());
 
-    public static IReadOnlyCollection<string> ToUsageStrings(
-        this IEnumerable<Namespace> references
-    ) => references
-        .Select(x => x.ToString())
-        .ToArray();
+    public static IReadOnlyCollection<string> ToUsageStrings(this IEnumerable<Namespace> references) =>
+        references.Select(x => x.ToString()).ToArray();
 }

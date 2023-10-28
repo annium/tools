@@ -10,9 +10,7 @@ internal class Writer : IWriter
 {
     private readonly ITemplateWriter _templateWriter;
 
-    public Writer(
-        ITemplateWriter templateWriter
-    )
+    public Writer(ITemplateWriter templateWriter)
     {
         _templateWriter = templateWriter;
     }
@@ -54,7 +52,12 @@ internal class Writer : IWriter
         }
     }
 
-    private void WriteClientContainer(string rootDir, Namespace rootNs, ClientContainerView container, bool root = false)
+    private void WriteClientContainer(
+        string rootDir,
+        Namespace rootNs,
+        ClientContainerView container,
+        bool root = false
+    )
     {
         var output = GetOutputPath(rootDir, rootNs, container.Namespace.ToNamespace());
         if (!Directory.Exists(output))

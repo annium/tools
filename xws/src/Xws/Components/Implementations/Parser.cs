@@ -22,8 +22,12 @@ internal class Parser : IParser
         var broadcasters = GetRawModels(tm, typeof(IBroadcaster<>)).Select(ParseBroadcaster).ToArray();
         var eventHandlers = GetRawModels(tm, typeof(IEventHandler<>)).Select(ParseEventHandler).ToArray();
         var requestHandlers = GetRawModels(tm, typeof(IRequestHandler<,>)).Select(ParseRequestHandler).ToArray();
-        var requestResponseHandlers = GetRawModels(tm, typeof(IRequestResponseHandler<,,>)).Select(ParseRequestResponseHandler).ToArray();
-        var subscriptionHandlers = GetRawModels(tm, typeof(ISubscriptionHandler<,>)).Select(ParseSubscriptionHandler).ToArray();
+        var requestResponseHandlers = GetRawModels(tm, typeof(IRequestResponseHandler<,,>))
+            .Select(ParseRequestResponseHandler)
+            .ToArray();
+        var subscriptionHandlers = GetRawModels(tm, typeof(ISubscriptionHandler<,>))
+            .Select(ParseSubscriptionHandler)
+            .ToArray();
 
         return new ApiModel(
             assembly,
@@ -51,21 +55,20 @@ internal class Parser : IParser
     private SubscriptionHandlerModel ParseSubscriptionHandler(RawHandlerModel x) =>
         new(x.Ns, x.Args[0].Name.Replace(SubscriptionInit, string.Empty), x.Args[0], x.Args[1]);
 
-    private IEnumerable<RawHandlerModel> GetRawModels(
-        ITypeManager tm,
-        Type target
-    )
+    private IEnumerable<RawHandlerModel> GetRawModels(ITypeManager tm, Type target)
     {
         var targetName = target.FullName;
 
         return tm.Types
-            .Select(x => (
-                type: x,
-                ifaces: x
-                    .GetInterfaces()
-                    .Where(i => i.IsGenericType && i.GetGenericTypeDefinition().FullName == targetName)
-                    .ToArray()
-            ))
+            .Select(
+                x =>
+                    (
+                        type: x,
+                        ifaces: x.GetInterfaces()
+                            .Where(i => i.IsGenericType && i.GetGenericTypeDefinition().FullName == targetName)
+                            .ToArray()
+                    )
+            )
             .Where(x => x.ifaces.Length > 0)
             .SelectMany(x =>
             {

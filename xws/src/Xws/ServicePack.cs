@@ -12,8 +12,7 @@ internal class ServicePack : ServicePackBase
         // can't understand that, but preloading assemblies speeds up process greatly, comparing to loading via AssemblyLoadContext
         container.AddRuntime(GetType().Assembly);
         container.AddTime().WithRealTime().SetDefault();
-        container.AddSerializers()
-            .WithJson(isDefault: true);
+        container.AddSerializers().WithJson(isDefault: true);
         container.AddAssemblyLoader();
         container.AddResourceLoader();
         container.AddArguments();

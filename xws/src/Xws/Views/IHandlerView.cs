@@ -1,5 +1,3 @@
 namespace Xws.Views;
 
-internal interface IHandlerView
-{
-}
+internal interface IHandlerView { }

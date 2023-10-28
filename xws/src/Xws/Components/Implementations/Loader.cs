@@ -12,11 +12,7 @@ internal class Loader : ILoader, ILogSubject
     private readonly IAssemblyLoaderBuilder _assemblyLoaderBuilder;
     private readonly IParser _parser;
 
-    public Loader(
-        IAssemblyLoaderBuilder assemblyLoaderBuilder,
-        IParser parser,
-        ILogger logger
-    )
+    public Loader(IAssemblyLoaderBuilder assemblyLoaderBuilder, IParser parser, ILogger logger)
     {
         _assemblyLoaderBuilder = assemblyLoaderBuilder;
         _parser = parser;

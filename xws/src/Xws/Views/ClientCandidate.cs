@@ -29,11 +29,6 @@ internal class ClientCandidate
 
     public override string ToString() => Name;
 
-    public static explicit operator ClientView(ClientCandidate x) => new(
-        x.Usages.Select(y => y.ToString()).ToArray(),
-        x.Namespace.ToString(),
-        x.Name,
-        x.Type,
-        x.Handlers
-    );
+    public static explicit operator ClientView(ClientCandidate x) =>
+        new(x.Usages.Select(y => y.ToString()).ToArray(), x.Namespace.ToString(), x.Name, x.Type, x.Handlers);
 }

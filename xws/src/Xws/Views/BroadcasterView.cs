@@ -5,10 +5,7 @@ internal class BroadcasterView : IHandlerView
     public string MessageType { get; }
     public string MessageName { get; }
 
-    public BroadcasterView(
-        string messageType,
-        string messageName
-    )
+    public BroadcasterView(string messageType, string messageName)
     {
         MessageType = messageType;
         MessageName = messageName;

@@ -9,11 +9,7 @@ public class EventHandlerModel : IHandlerModel
     public Type[] References => new[] { Message };
     public Type Message { get; }
 
-    public EventHandlerModel(
-        Namespace @namespace,
-        string name,
-        Type message
-    )
+    public EventHandlerModel(Namespace @namespace, string name, Type message)
     {
         Namespace = @namespace;
         Name = name;

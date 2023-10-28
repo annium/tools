@@ -7,12 +7,7 @@ internal class SubscriptionHandlerView : IHandlerView
     public string InitName { get; }
     public string MessageType { get; }
 
-    public SubscriptionHandlerView(
-        string initType,
-        bool initTypeNullable,
-        string initName,
-        string messageType
-    )
+    public SubscriptionHandlerView(string initType, bool initTypeNullable, string initName, string messageType)
     {
         InitType = initType;
         InitTypeNullable = initTypeNullable;

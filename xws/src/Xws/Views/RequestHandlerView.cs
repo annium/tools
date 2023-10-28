@@ -6,11 +6,7 @@ internal class RequestHandlerView : IHandlerView
     public bool RequestTypeNullable { get; }
     public string RequestName { get; }
 
-    public RequestHandlerView(
-        string requestType,
-        bool requestTypeNullable,
-        string requestName
-    )
+    public RequestHandlerView(string requestType, bool requestTypeNullable, string requestName)
     {
         RequestType = requestType;
         RequestTypeNullable = requestTypeNullable;

@@ -16,12 +16,7 @@ internal class GenerateCommand : Command<GenerateCommandConfiguration>, ICommand
     private readonly IProcessor _processor;
     private readonly IWriter _writer;
 
-    public GenerateCommand(
-        ILoader loader,
-        IProcessor processor,
-        IWriter writer,
-        ILogger logger
-    )
+    public GenerateCommand(ILoader loader, IProcessor processor, IWriter writer, ILogger logger)
     {
         _loader = loader;
         _processor = processor;

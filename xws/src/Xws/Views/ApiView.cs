@@ -17,7 +17,6 @@ internal class ApiView
         ClientRootView client,
         ClientRootView testClient
     )
-
     {
         Namespace = ns;
         Usages = usages;
