@@ -135,14 +135,14 @@ internal class Processor : IProcessor
             .OrderNamespaces()
             .ToArray();
 
-        var clientUsages = node.Usages
-            .Concat(new[] { "System", "System.Threading", "System.Threading.Tasks" })
+        var clientUsages = node
+            .Usages.Concat(new[] { "System", "System.Threading", "System.Threading.Tasks" })
             .OrderNamespaces()
             .ToArray();
         var clientRoot = new ClientRootView(node.Namespace, clientUsages, type, node.Clients);
 
-        var testClientUsages = node.Usages
-            .Concat(new[] { "System", "System.Threading.Tasks" })
+        var testClientUsages = node
+            .Usages.Concat(new[] { "System", "System.Threading.Tasks" })
             .OrderNamespaces()
             .ToArray();
         var testClientRoot = new ClientRootView(node.Namespace, testClientUsages, testType, node.Clients);
@@ -193,8 +193,8 @@ internal class Processor : IProcessor
             .OrderNamespaces()
             .ToArray();
 
-        var clients = ancestors.Values
-            .OrderBy(x => x.Namespace.ToString())
+        var clients = ancestors
+            .Values.OrderBy(x => x.Namespace.ToString())
             .ThenBy(x => x.Name)
             .Concat<IClientView>(children.Select(x => (ClientView)x).OrderBy(x => x.Namespace).ThenBy(x => x.Name))
             .ToArray();

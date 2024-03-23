@@ -59,15 +59,14 @@ internal class Parser : IParser
     {
         var targetName = target.FullName;
 
-        return tm.Types
-            .Select(
-                x =>
-                    (
-                        type: x,
-                        ifaces: x.GetInterfaces()
-                            .Where(i => i.IsGenericType && i.GetGenericTypeDefinition().FullName == targetName)
-                            .ToArray()
-                    )
+        return tm
+            .Types.Select(x =>
+                (
+                    type: x,
+                    ifaces: x.GetInterfaces()
+                        .Where(i => i.IsGenericType && i.GetGenericTypeDefinition().FullName == targetName)
+                        .ToArray()
+                )
             )
             .Where(x => x.ifaces.Length > 0)
             .SelectMany(x =>
