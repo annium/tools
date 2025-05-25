@@ -11,8 +11,7 @@ public class RequestHandlerModel : IHandlerModel
     public Namespace Namespace { get; }
     public string Name { get; }
 
-    public Type[] References =>
-        new[] { typeof(Task<IStatusResult<OperationStatus>>), typeof(CancellationToken), Request };
+    public Type[] References => [typeof(Task<IStatusResult<OperationStatus>>), typeof(CancellationToken), Request];
 
     public Type Request { get; }
 

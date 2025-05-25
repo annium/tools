@@ -17,7 +17,7 @@ public static class NamespaceExtensions
             throw new ArgumentException("Value cannot be null.", nameof(ns));
 
         if (ns == string.Empty)
-            return Array.Empty<string>();
+            return [];
 
         return ns.Split('.').ToArray().EnsureValidNamespace();
     }

@@ -12,12 +12,11 @@ public class RequestResponseHandlerModel : IHandlerModel
     public string Name { get; }
 
     public Type[] References =>
-        new[]
-        {
+        [
             typeof(Task<>).MakeGenericType(typeof(IStatusResult<,>).MakeGenericType(typeof(OperationStatus), Response)),
             typeof(CancellationToken),
-            Request
-        };
+            Request,
+        ];
 
     public Type Request { get; }
     public Type Response { get; }

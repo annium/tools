@@ -130,21 +130,18 @@ internal class Processor : IProcessor
             "System.Net.WebSockets",
             "Annium.Core.DependencyInjection",
             "Annium.Infrastructure.WebSockets.Client",
-            node.Namespace
+            node.Namespace,
         }
             .OrderNamespaces()
             .ToArray();
 
         var clientUsages = node
-            .Usages.Concat(new[] { "System", "System.Threading", "System.Threading.Tasks" })
+            .Usages.Concat(["System", "System.Threading", "System.Threading.Tasks"])
             .OrderNamespaces()
             .ToArray();
         var clientRoot = new ClientRootView(node.Namespace, clientUsages, type, node.Clients);
 
-        var testClientUsages = node
-            .Usages.Concat(new[] { "System", "System.Threading.Tasks" })
-            .OrderNamespaces()
-            .ToArray();
+        var testClientUsages = node.Usages.Concat(["System", "System.Threading.Tasks"]).OrderNamespaces().ToArray();
         var testClientRoot = new ClientRootView(node.Namespace, testClientUsages, testType, node.Clients);
 
         return new ApiView(apiNs, apiUsages, name, clientRoot, testClientRoot);
@@ -182,7 +179,7 @@ internal class Processor : IProcessor
             .GroupBy(x => ns.Append(x.Namespace.From(ns).First()).ToNamespace())
             .ToDictionary(x => x.Key, x => BuildClientNode(x.Key, x.Key.Last(), $"{x.Key.Last()}{Root}", x.ToArray()));
 
-        var clientUsages = new[] { "Annium.Infrastructure.WebSockets.Client", };
+        var clientUsages = new[] { "Annium.Infrastructure.WebSockets.Client" };
 
         var usages = children
             .Select(x => x.Namespace)

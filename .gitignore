@@ -1,10 +1,12 @@
 # editors
-.vscode/
 .idea/
-*.DotSettings.user
+*.DotSettings*
 
-# xs ignore patterns
-.xs.ignore
-.xs.credentials
-nuget.config
+# artifacts
+*.log
+*.nupkg
+
+# xx ignore patterns
+.xx.ignore
+.xx.credentials
 lcov.info

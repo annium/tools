@@ -26,18 +26,18 @@ internal class GenerateCommand : Command<GenerateCommandConfiguration>, ICommand
 
     public override void Handle(GenerateCommandConfiguration cfg, CancellationToken ct)
     {
-        this.Info($"Generate '{cfg.ProjectName}' client");
+        this.Info<string>("Generate '{projectName}' client", cfg.ProjectName);
 
-        this.Info($"Load '{cfg.ProjectName}' model");
+        this.Info<string>("Load '{projectName}' model", cfg.ProjectName);
         var model = _loader.Load(cfg.Assembly, cfg.ProjectName);
 
         this.Info("Process api model to api view");
         var ns = Namespace.New(string.IsNullOrWhiteSpace(cfg.Namespace) ? Path.GetFileName(cfg.Output) : cfg.Namespace);
         var view = _processor.Process(ns, model);
 
-        this.Info($"Write api view to {cfg.Output}");
+        this.Info<string>("Write api view to {output}", cfg.Output);
         _writer.Write(cfg.Output, view);
-        this.Info($"Client written to {cfg.Output}");
+        this.Info<string>("Client written to {output}", cfg.Output);
     }
 }
 

@@ -70,11 +70,7 @@ public sealed record Namespace : IEnumerable<string>
 
     public bool Equals(Namespace? other)
     {
-        if (ReferenceEquals(null, other))
-            return false;
-        if (ReferenceEquals(this, other))
-            return true;
-        return _parts.SequenceEqual(other._parts);
+        return other is not null && (ReferenceEquals(this, other) || _parts.SequenceEqual(other._parts));
     }
 
     public override int GetHashCode() => HashCodeSeq.Combine(_parts);

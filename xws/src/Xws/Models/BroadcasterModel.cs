@@ -7,7 +7,7 @@ public class BroadcasterModel : IHandlerModel
     public Namespace Namespace { get; }
     public string Name { get; }
 
-    public Type[] References => new[] { typeof(IObservable<>).MakeGenericType(Message) };
+    public Type[] References => [typeof(IObservable<>).MakeGenericType(Message)];
 
     public Type Message { get; }
 

@@ -5,7 +5,8 @@ namespace Xws.Extensions;
 
 internal static class TypeExtensions
 {
-    private static readonly ImmutableArray<Type> BaseTypes = ImmutableArray.Create(
+    private static readonly ImmutableArray<Type> _baseTypes =
+    [
         typeof(int),
         typeof(uint),
         typeof(long),
@@ -21,8 +22,8 @@ internal static class TypeExtensions
         typeof(char),
         typeof(string),
         typeof(object),
-        typeof(void)
-    );
+        typeof(void),
+    ];
 
-    public static bool IsBaseType(this Type type) => BaseTypes.Contains(type);
+    public static bool IsBaseType(this Type type) => _baseTypes.Contains(type);
 }

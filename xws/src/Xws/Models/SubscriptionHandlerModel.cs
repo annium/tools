@@ -12,8 +12,7 @@ public class SubscriptionHandlerModel : IHandlerModel
     public string Name { get; }
 
     public Type[] References =>
-        new[]
-        {
+        [
             Init,
             typeof(CancellationToken),
             typeof(Task<>).MakeGenericType(
@@ -21,8 +20,8 @@ public class SubscriptionHandlerModel : IHandlerModel
                     typeof(OperationStatus),
                     typeof(IObservable<>).MakeGenericType(Message)
                 )
-            )
-        };
+            ),
+        ];
 
     public Type Init { get; }
     public Type Message { get; }

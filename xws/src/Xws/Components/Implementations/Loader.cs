@@ -27,13 +27,13 @@ internal class Loader : ILoader, ILogSubject
         var loader = _assemblyLoaderBuilder.UseFileSystemLoader(Path.GetDirectoryName(assemblyPath)!).Build();
         var name = Path.GetFileNameWithoutExtension(assemblyPath);
 
-        this.Info($"load assembly {name}");
+        this.Info<string>("load assembly {name}", name);
         var assembly = loader.Load(name);
-        this.Info($"get assembly {name} TypeManager");
+        this.Info<string>("get assembly {name} TypeManager", name);
         var tm = TypeManager.GetInstance(assembly, VoidLogger.Instance);
-        this.Info($"parse assembly {name} model");
+        this.Info<string>("parse assembly {name} model", name);
         var model = _parser.Parse(assembly, projectName, tm);
-        this.Info($"parsed assembly {name}");
+        this.Info<string>("parsed assembly {name}", name);
 
         return model;
     }
