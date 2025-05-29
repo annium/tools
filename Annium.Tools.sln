@@ -97,29 +97,29 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "xrest", "xrest", "{84DE1849
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{28B0CC8E-FB7D-49BA-A25F-6326A95C52C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRest", "xrest\src\XRest\XRest.csproj", "{B7DA40AA-DBA6-4D0C-AAA5-063FBCBE49B9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Annium.XRest", "xrest\src\Annium.XRest\Annium.XRest.csproj", "{B7DA40AA-DBA6-4D0C-AAA5-063FBCBE49B9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "clients", "clients", "{70E5CA41-C070-4A62-84CA-7FBA18016CCF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRest.Clients.Csharp", "xrest\src\clients\XRest.Clients.Csharp\XRest.Clients.Csharp.csproj", "{8E5D1957-1120-41E9-BD61-7800083C2175}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Annium.XRest.Clients.Csharp", "xrest\src\clients\Annium.XRest.Clients.Csharp\Annium.XRest.Clients.Csharp.csproj", "{8E5D1957-1120-41E9-BD61-7800083C2175}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRest.Clients.Shared", "xrest\src\clients\XRest.Clients.Shared\XRest.Clients.Shared.csproj", "{D9C46893-B1FB-4077-8546-D2D5E1069E81}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Annium.XRest.Clients.Shared", "xrest\src\clients\Annium.XRest.Clients.Shared\Annium.XRest.Clients.Shared.csproj", "{D9C46893-B1FB-4077-8546-D2D5E1069E81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRest.Clients.TypeScript", "xrest\src\clients\XRest.Clients.TypeScript\XRest.Clients.TypeScript.csproj", "{76CD87D3-DC95-44E5-BB10-CDFB7CD98459}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Annium.XRest.Clients.TypeScript", "xrest\src\clients\Annium.XRest.Clients.TypeScript\Annium.XRest.Clients.TypeScript.csproj", "{76CD87D3-DC95-44E5-BB10-CDFB7CD98459}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRest.Core", "xrest\src\XRest.Core\XRest.Core.csproj", "{1047A02D-AE52-459D-9AD2-7F7E5CA28553}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Annium.XRest.Core", "xrest\src\Annium.XRest.Core\Annium.XRest.Core.csproj", "{1047A02D-AE52-459D-9AD2-7F7E5CA28553}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "demo", "demo", "{6A4A0FBF-0A15-4DC2-B34E-AC7CC799BAA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRest.Demo.Client", "xrest\demo\XRest.Demo.Client\XRest.Demo.Client.csproj", "{19C43EEC-88B9-4E52-9AE9-C9433AF16B84}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Annium.XRest.Demo.Client", "xrest\demo\Annium.XRest.Demo.Client\Annium.XRest.Demo.Client.csproj", "{19C43EEC-88B9-4E52-9AE9-C9433AF16B84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRest.Demo.Server", "xrest\demo\XRest.Demo.Server\XRest.Demo.Server.csproj", "{30BD7E25-7227-4D58-AB61-06AC4F415395}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Annium.XRest.Demo.Server", "xrest\demo\Annium.XRest.Demo.Server\Annium.XRest.Demo.Server.csproj", "{30BD7E25-7227-4D58-AB61-06AC4F415395}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sources", "sources", "{95A1F6CA-DCAB-4C94-964F-546B9735448C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRest.Sources.AspNetCore", "xrest\src\sources\XRest.Sources.AspNetCore\XRest.Sources.AspNetCore.csproj", "{B3CEA55B-5E47-4376-A01C-B3052403CA24}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Annium.XRest.Sources.AspNetCore", "xrest\src\sources\Annium.XRest.Sources.AspNetCore\Annium.XRest.Sources.AspNetCore.csproj", "{B3CEA55B-5E47-4376-A01C-B3052403CA24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRest.Sources.Shared", "xrest\src\sources\XRest.Sources.Shared\XRest.Sources.Shared.csproj", "{76569C12-E652-45E0-AA71-9ED511D9C226}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Annium.XRest.Sources.Shared", "xrest\src\sources\Annium.XRest.Sources.Shared\Annium.XRest.Sources.Shared.csproj", "{76569C12-E652-45E0-AA71-9ED511D9C226}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "xsass", "xsass", "{6FF4EAFE-F484-471D-B9BF-A9E3A6EFC001}"
 EndProject
