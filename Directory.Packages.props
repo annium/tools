@@ -40,6 +40,8 @@
     <PackageVersion Include="Microsoft.Extensions.FileSystemGlobbing" Version="9.0.5" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
     <PackageVersion Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.12.19" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.14.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.14.0" />
     <PackageVersion Include="MongoDB.Driver" Version="3.4.0" />
     <PackageVersion Include="NetMQ" Version="4.0.1.6" />
     <PackageVersion Include="Npgsql" Version="9.0.3" />
