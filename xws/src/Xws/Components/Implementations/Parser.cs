@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Annium.Core.Runtime.Types;
-using Annium.Mesh.Server.Handlers;
+using Annium.Mesh.Server;
 using Xws.Extensions;
 using Xws.Models;
 
