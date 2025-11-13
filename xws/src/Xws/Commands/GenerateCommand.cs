@@ -47,9 +47,9 @@ internal class GenerateCommandConfiguration
     [Help("Path to API assembly.")]
     public string Assembly
     {
-        get => _assembly;
-        set => _assembly = Path.GetFullPath(value);
-    }
+        get;
+        set => field = Path.GetFullPath(value);
+    } = string.Empty;
 
     [Option("n", true)]
     [Help("Project name.")]
@@ -59,14 +59,11 @@ internal class GenerateCommandConfiguration
     [Help("Output directory. Will be removed if exists.")]
     public string Output
     {
-        get => _output;
-        set => _output = Path.GetFullPath(value);
-    }
+        get;
+        set => field = Path.GetFullPath(value);
+    } = string.Empty;
 
     [Option("ns")]
     [Help("Root namespace for created classes.")]
     public string Namespace { get; set; } = string.Empty;
-
-    private string _assembly = string.Empty;
-    private string _output = string.Empty;
 }
