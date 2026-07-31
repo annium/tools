@@ -52,7 +52,7 @@ internal class ServicePack : ServicePackBase
         container.AddLogging();
     }
 
-    public override Task SetupAsync(IServiceProvider provider, CancellationToken ct)
+    public override async Task SetupAsync(IServiceProvider provider, CancellationToken ct)
     {
         provider.UseLogging(route => route.UseConsole());
 
@@ -62,13 +62,11 @@ internal class ServicePack : ServicePackBase
         try
         {
             var state = stateFactory.GetState();
-            stateManager.SetState(state);
+            await stateManager.SetStateAsync(state);
         }
         catch (AggregateException ex)
         {
             throw ex.InnerException!;
         }
-
-        return Task.CompletedTask;
     }
 }

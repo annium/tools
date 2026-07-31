@@ -24,15 +24,14 @@ public class StateManager : ILogSubject
         Logger = logger;
     }
 
-    public void SetState(State state)
+    public Task SetStateAsync(State state)
     {
         if (State != null)
-            throw new InvalidOperationException($"State is already set");
+            throw new InvalidOperationException("State is already set");
 
         State = state;
-#pragma warning disable VSTHRD002
-        StartAsync().GetAwaiter().GetResult();
-#pragma warning restore VSTHRD002
+
+        return StartAsync();
     }
 
     private async Task StartAsync()
@@ -49,40 +48,39 @@ public class StateManager : ILogSubject
             _scheduler.Schedule(() => BackupAsync(server, plan), plan.Interval);
     }
 
-    private async Task BackupAsync(Server server, Plan plan)
+    internal async Task BackupAsync(Server server, Plan plan)
     {
         var backupId = _namer.GetName();
         try
         {
-            // cleanup
-            var deletedItems = (await plan.Storage.ListAsync())
-                .OrderByDescending(i => i)
-                .Skip(plan.Capacity - 1)
-                .ToArray();
-            if (deletedItems.Length > 0)
-            {
-                foreach (var item in deletedItems)
-                {
-                    await plan.Storage.DeleteAsync(item);
-                }
-            }
-
             // create backup
             var path = await server.Connection.BackupAsync();
 
-            // upload backup
-            var name = _namer.GetName();
-            using (var fs = File.OpenRead(path))
-                await plan.Storage.UploadAsync(fs, name);
-
-            // delete temp file
-            if (File.Exists(path))
+            // upload backup, then drop the temp file whatever the outcome
+            try
+            {
+                using var fs = File.OpenRead(path);
+                await plan.Storage.UploadAsync(fs, backupId);
+            }
+            finally
+            {
                 File.Delete(path);
+            }
+
+            // cleanup happens only after the new backup is stored: pruning first meant a failing
+            // backup still consumed a slot, draining the archive to nothing over Capacity runs
+            var obsoleteItems = (await plan.Storage.ListAsync())
+                .OrderByDescending(i => i)
+                .Skip(plan.Capacity)
+                .ToArray();
+            foreach (var item in obsoleteItems)
+                await plan.Storage.DeleteAsync(item);
 
             await NotifyAllAsync(ch => ch.InfoAsync($"{server} {plan}: scheduled backup {backupId} procedure succeed"));
         }
         catch (Exception e)
         {
+            this.Error(e);
             await NotifyAllAsync(ch =>
                 ch.ErrorAsync($"{server} {plan}: scheduled backup {backupId} procedure failed: {e}")
             );
