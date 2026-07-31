@@ -102,7 +102,7 @@ uninstall-xrest:
 
 publish-backuper:
     @echo "=== $0 ==="
-    @just _publish-image Backuper/src Backuper.Api/app.dockerfile backuper
+    @just _publish-image xbackup/src Backuper.Api/app.dockerfile backuper
 
 # ci
 

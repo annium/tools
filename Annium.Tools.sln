@@ -3,23 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backuper", "Backuper", "{B36DD93C-AB73-44FD-BAC4-F61EE762603E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "xbackup", "xbackup", "{B36DD93C-AB73-44FD-BAC4-F61EE762603E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{024BD427-4CE7-427A-A6E0-464E3B5E19A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backuper.Api", "Backuper\src\Backuper.Api\Backuper.Api.csproj", "{DA08D862-DDAD-4059-BD5F-2DCE87BC2B82}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backuper.Api", "xbackup\src\Backuper.Api\Backuper.Api.csproj", "{DA08D862-DDAD-4059-BD5F-2DCE87BC2B82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backuper.Connection.Abstract", "Backuper\src\Backuper.Connection.Abstract\Backuper.Connection.Abstract.csproj", "{CE36B158-9CA3-46A1-8EB6-603B7D1CA1D2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backuper.Connection.Abstract", "xbackup\src\Backuper.Connection.Abstract\Backuper.Connection.Abstract.csproj", "{CE36B158-9CA3-46A1-8EB6-603B7D1CA1D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backuper.Connection.PostgreSQL", "Backuper\src\Backuper.Connection.PostgreSQL\Backuper.Connection.PostgreSQL.csproj", "{AC687DB6-B45B-421A-9D33-8636EE10A549}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backuper.Connection.PostgreSQL", "xbackup\src\Backuper.Connection.PostgreSQL\Backuper.Connection.PostgreSQL.csproj", "{AC687DB6-B45B-421A-9D33-8636EE10A549}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backuper.Notification.Abstract", "Backuper\src\Backuper.Notification.Abstract\Backuper.Notification.Abstract.csproj", "{46A000DD-584F-4776-8FF1-3369F5C46ED6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backuper.Notification.Abstract", "xbackup\src\Backuper.Notification.Abstract\Backuper.Notification.Abstract.csproj", "{46A000DD-584F-4776-8FF1-3369F5C46ED6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backuper.Notification.Slack", "Backuper\src\Backuper.Notification.Slack\Backuper.Notification.Slack.csproj", "{92542880-29AE-474E-B2CF-2BF08891387D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backuper.Notification.Slack", "xbackup\src\Backuper.Notification.Slack\Backuper.Notification.Slack.csproj", "{92542880-29AE-474E-B2CF-2BF08891387D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backuper.Shared", "Backuper\src\Backuper.Shared\Backuper.Shared.csproj", "{14016BD3-AF9B-49C9-869A-A4097266C5A0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backuper.Shared", "xbackup\src\Backuper.Shared\Backuper.Shared.csproj", "{14016BD3-AF9B-49C9-869A-A4097266C5A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backuper.Storage", "Backuper\src\Backuper.Storage\Backuper.Storage.csproj", "{DF233A9A-2554-4C7B-838D-82B6DE7B4725}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backuper.Storage", "xbackup\src\Backuper.Storage\Backuper.Storage.csproj", "{DF233A9A-2554-4C7B-838D-82B6DE7B4725}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "xrest", "xrest", "{84DE1849-21D2-4A87-9605-B40644CDEB94}"
 EndProject
