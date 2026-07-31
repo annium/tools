@@ -104,14 +104,6 @@ publish-backuper:
     @echo "=== $0 ==="
     @just _publish-image Backuper/src Backuper.Api/app.dockerfile backuper
 
-publish-mbus-proxy:
-    @echo "=== $0 ==="
-    @just _publish-image MessageBus/src/MessageBus.Proxy app.dockerfile mbus.proxy
-
-publish-mbus-sink:
-    @echo "=== $0 ==="
-    @just _publish-image MessageBus/src/MessageBus.Sink app.dockerfile mbus.sink
-
 # ci
 
 ci-merge-request-short:
