@@ -54,49 +54,69 @@ test:
     @echo "=== $0 ==="
     dotnet test -c Release --no-build --nologo --logger "trx;LogFilePrefix=test-results.trx"
 
-# publish / install / uninstall subprojects via their own makefiles
+# publish / install / uninstall subprojects
+# publish packs with --no-build, so it expects a preceding `just build`
 
 publish: publish-doclint publish-versioning publish-xrest
 
 publish-doclint:
     @echo "=== $0 ==="
-    @just _make-publish doclint
+    @just _publish-packages doclint/src/Annium.DocLint
 
 publish-versioning:
     @echo "=== $0 ==="
-    @just _make-publish versioning
+    @just _publish-packages versioning/src/Annium.Versioning
 
 publish-xrest:
     @echo "=== $0 ==="
-    @just _make-publish xrest
+    @just _publish-packages \
+        xrest/src/Annium.XRest.Core \
+        xrest/src/Annium.XRest \
+        xrest/src/sources/Annium.XRest.Sources.Shared \
+        xrest/src/sources/Annium.XRest.Sources.AspNetCore
 
 install: install-doclint install-versioning install-xrest
 
 install-doclint:
     @echo "=== $0 ==="
-    make -C doclint install
+    @just _tool-install doclint/src/Annium.DocLint
 
 install-versioning:
     @echo "=== $0 ==="
-    make -C versioning install
+    @just _tool-install versioning/src/Annium.Versioning
 
 install-xrest:
     @echo "=== $0 ==="
-    make -C xrest install
+    @just _tool-install xrest/src/Annium.XRest
 
 uninstall: uninstall-doclint uninstall-versioning uninstall-xrest
 
 uninstall-doclint:
     @echo "=== $0 ==="
-    make -C doclint uninstall
+    @just _tool-uninstall doclint/src/Annium.DocLint
 
 uninstall-versioning:
     @echo "=== $0 ==="
-    make -C versioning uninstall
+    @just _tool-uninstall versioning/src/Annium.Versioning
 
 uninstall-xrest:
     @echo "=== $0 ==="
-    make -C xrest uninstall
+    @just _tool-uninstall xrest/src/Annium.XRest
+
+# xrest development
+
+xrest-server:
+    @echo "=== $0 ==="
+    dotnet run --project xrest/demo/Annium.XRest.Demo.Server
+
+xrest-gen:
+    @echo "=== $0 ==="
+    dotnet run --project xrest/src/Annium.XRest -- \
+        cs gen \
+        -s http://localhost:5000 \
+        -ns Annium.XRest.Demo.Client.Api \
+        -o xrest/demo/Annium.XRest.Demo.Client/Api \
+        -trace
 
 # publish docker images
 
@@ -127,7 +147,7 @@ ci-merge-request-full:
     just build
     just test
 
-ci-release apiKey repository githubToken:
+ci-release:
     #!/usr/bin/env bash
     set -e
     echo "=== ci-release ==="
@@ -138,24 +158,16 @@ ci-release apiKey repository githubToken:
     just clean
     just build
     just publish
-    just ci-push-tag "$2" "$3"
+    just ci-push-tag
     echo "Release complete"
 
 ci-set-package-version:
     @echo "=== $0 ==="
     dotnet tool run versioning set-version -v $(cat version)
 
-ci-push-tag repository githubToken:
+ci-push-tag:
     #!/usr/bin/env bash
     set -e
     echo "=== ci-push-tag ==="
     packageVersion=$(dotnet tool run versioning get-version -v $(cat version))
     git push origin v$packageVersion
-
-# private helpers
-
-_make-publish name:
-    #!/usr/bin/env bash
-    set -e
-    packageVersion=$(dotnet tool run versioning get-version -v $(cat version))
-    make -C {{name}} publish packageVersion=$packageVersion
