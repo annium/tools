@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Annium.Core.DependencyInjection;
 using Annium.Core.Mapper;
 using Annium.Core.Runtime;
@@ -15,7 +17,7 @@ namespace Xws;
 
 internal class ServicePack : ServicePackBase
 {
-    public override void Register(IServiceContainer container, IServiceProvider provider)
+    public override Task RegisterAsync(IServiceContainer container, IServiceProvider provider, CancellationToken ct)
     {
         // can't understand that, but preloading assemblies speeds up process greatly, comparing to loading via AssemblyLoadContext
         container.AddRuntime(GetType().Assembly);
@@ -32,10 +34,14 @@ internal class ServicePack : ServicePackBase
         container.Add<IProcessor, Processor>().Singleton();
         container.Add<ITemplateWriter, TemplateWriter>().Singleton();
         container.Add<IWriter, Writer>().Singleton();
+
+        return Task.CompletedTask;
     }
 
-    public override void Setup(IServiceProvider provider)
+    public override Task SetupAsync(IServiceProvider provider, CancellationToken ct)
     {
         provider.UseLogging(route => route.UseConsole());
+
+        return Task.CompletedTask;
     }
 }
