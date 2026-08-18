@@ -16,8 +16,8 @@ _publish-packages +projects:
         (
             cd "$project"
             dotnet pack --no-build -o . -c Release -p:SymbolPackageFormat=snupkg -p:PackageVersion=$packageVersion
-            dotnet nuget push "*.nupkg" --source https://api.nuget.org/v3/index.json --api-key "$apiKey"
-            find . -type f -name '*.nupkg' -delete
+            dotnet nuget push "*.nupkg" --source https://api.nuget.org/v3/index.json --api-key "$apiKey" --skip-duplicate
+            find . -type f \( -name '*.nupkg' -o -name '*.snupkg' \) -delete
         )
     done
 

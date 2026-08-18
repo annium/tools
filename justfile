@@ -29,8 +29,9 @@ ensure-no-changes:
     echo "=== ensure-no-changes ==="
     if [[ -n "$(git status --porcelain)" ]]; then
         echo "Changes detected:"
-        git status
-        git --no-pager diff --no-color --exit-code
+        git status --short
+        git --no-pager diff --no-color HEAD
+        exit 1
     fi
 
 update:
@@ -41,7 +42,7 @@ update:
 clean:
     @echo "=== $0 ==="
     dotnet tool run xs clean -sc -ic
-    find . -type f -name '*.nupkg' | xargs -I% rm %
+    find . -type f \( -name '*.nupkg' -o -name '*.snupkg' \) -delete
 
 build:
     #!/usr/bin/env bash
@@ -52,7 +53,7 @@ build:
 
 test:
     @echo "=== $0 ==="
-    dotnet test -c Release --no-build --nologo --logger "trx;LogFilePrefix=test-results.trx"
+    dotnet test -c Release --no-build --report-xunit-trx
 
 # publish / install / uninstall subprojects
 # publish packs with --no-build, so it expects a preceding `just build`
@@ -147,27 +148,39 @@ ci-merge-request-full:
     just build
     just test
 
-ci-release:
+ci-release apiKey repository githubToken:
     #!/usr/bin/env bash
     set -e
     echo "=== ci-release ==="
+    # the publish recipes read the nuget key from .xs.credentials, which `just copy-keys` provisions
+    # locally from the umbrella repo; in CI it arrives as a secret instead. The file is gitignored,
+    # so writing it here does not disturb ensure-no-changes.
+    printf '%s' "$1" > .xs.credentials
     just setup
     just format
     just ensure-no-changes
     just ci-set-package-version
     just clean
     just build
+    just test
     just publish
-    just ci-push-tag
+    just ci-push-tag "$2" "$3"
     echo "Release complete"
 
 ci-set-package-version:
     @echo "=== $0 ==="
+    git config user.name "it"
+    git config user.email "it@annium.com"
     dotnet tool run versioning set-version -v $(cat version)
 
-ci-push-tag:
+ci-push-tag repository githubToken:
     #!/usr/bin/env bash
     set -e
     echo "=== ci-push-tag ==="
     packageVersion=$(dotnet tool run versioning get-version -v $(cat version))
+    git remote set-url origin https://x-access-token:"$2"@github.com/"$1".git
+    if git ls-remote --exit-code --tags origin "v$packageVersion" >/dev/null 2>&1; then
+        echo "tag v$packageVersion already published, skipping"
+        exit 0
+    fi
     git push origin v$packageVersion
