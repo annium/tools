@@ -34,8 +34,11 @@
     <!-- Workspaces 5.9.0 declares a lower bound of 5.9.0-1.26328.17 on this package, a prerelease that was
          never published; pinned to the released 5.9.0 so the resolution is explicit rather than NU1603 -->
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="5.9.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" />
+    <!-- not referenced by any project: Annium.Analyzers pulls it transitively at 5.0.0, which then
+         demands Common/CSharp 5.0.0 and collides with the 5.9.0 line (NU1608). Pinned here so
+         transitive pinning lifts it to 5.9.0. -->
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="5.9.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="5.9.0" />
     <PackageVersion Include="Npgsql" Version="10.0.3" />
     <PackageVersion Include="NSwag.AspNetCore" Version="14.7.1" />
     <PackageVersion Include="Scriban" Version="7.2.6" />
