@@ -12,7 +12,7 @@ public sealed record Namespace : IEnumerable<string>
 {
     #region static
 
-    public static Namespace Of(Type type) => New(type.Namespace!.ToNamespaceArray());
+    public static Namespace Of(Type type) => New(type.Namespace.NotNull().ToNamespaceArray());
 
     public static Namespace New(string ns) => New(ns.ToNamespaceArray());
 

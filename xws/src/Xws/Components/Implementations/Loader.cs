@@ -1,4 +1,5 @@
 using System.IO;
+using Annium;
 using Annium.Core.Runtime.Loader;
 using Annium.Core.Runtime.Types;
 using Annium.Logging;
@@ -24,7 +25,7 @@ internal class Loader : ILoader, ILogSubject
         if (!File.Exists(assemblyPath))
             throw new FileNotFoundException($"Assembly file '{assemblyPath}' missing.");
 
-        var loader = _assemblyLoaderBuilder.UseFileSystemLoader(Path.GetDirectoryName(assemblyPath)!).Build();
+        var loader = _assemblyLoaderBuilder.UseFileSystemLoader(Path.GetDirectoryName(assemblyPath).NotNull()).Build();
         var name = Path.GetFileNameWithoutExtension(assemblyPath);
 
         this.Info<string>("load assembly {name}", name);

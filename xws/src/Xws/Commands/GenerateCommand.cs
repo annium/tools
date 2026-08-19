@@ -35,6 +35,15 @@ internal class GenerateCommand : Command<GenerateCommandConfiguration>, ICommand
         var ns = Namespace.New(string.IsNullOrWhiteSpace(cfg.Namespace) ? Path.GetFileName(cfg.Output) : cfg.Namespace);
         var view = _processor.Process(ns, model);
 
+        // the output directory is generated in full, so whatever is there belongs to an older run: a
+        // handler renamed or removed since would otherwise keep its generated file, as the help text
+        // has always said it would not. Same contract, and same fix, as the xrest client generator
+        if (Directory.Exists(cfg.Output))
+        {
+            this.Info<string>("Remove existing {output}", cfg.Output);
+            Directory.Delete(cfg.Output, recursive: true);
+        }
+
         this.Info<string>("Write api view to {output}", cfg.Output);
         _writer.Write(cfg.Output, view);
         this.Info<string>("Client written to {output}", cfg.Output);

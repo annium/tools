@@ -52,18 +52,13 @@ internal class Writer : IWriter
         }
     }
 
-    private void WriteClientContainer(
-        string rootDir,
-        Namespace rootNs,
-        ClientContainerView container,
-        bool root = false
-    )
+    private void WriteClientContainer(string rootDir, Namespace rootNs, ClientContainerView container)
     {
         var output = GetOutputPath(rootDir, rootNs, container.Namespace.ToNamespace());
         if (!Directory.Exists(output))
             Directory.CreateDirectory(output);
 
-        Write(output, container.Type, root ? "Templates.ClientRoot" : "Templates.ClientContainer", container);
+        Write(output, container.Type, "Templates.ClientContainer", container);
 
         foreach (var client in container.Clients)
             WriteAbstractClient(rootDir, rootNs, client);

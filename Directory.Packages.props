@@ -10,6 +10,7 @@
     <PackageVersion Include="Annium.Configuration.Yaml" Version="1.1.44" />
     <PackageVersion Include="Annium.Core.Mapper" Version="1.1.44" />
     <PackageVersion Include="Annium.Core.Entrypoint" Version="1.1.44" />
+    <PackageVersion Include="Annium.Core.Runtime" Version="1.1.44" />
     <PackageVersion Include="Annium.Core.Runtime.Loader" Version="1.1.44" />
     <PackageVersion Include="Annium.Data.Models" Version="1.1.44" />
     <PackageVersion Include="Annium.Data.Operations" Version="1.1.44" />

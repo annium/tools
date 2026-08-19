@@ -5,9 +5,9 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Annium.Net.Http" />
+    <ProjectReference Include="../Backuper.Notification.Abstract/Backuper.Notification.Abstract.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../Backuper.Notification.Abstract/Backuper.Notification.Abstract.csproj" />
+    <PackageReference Include="Annium.Net.Http" />
   </ItemGroup>
 </Project>
