@@ -7,6 +7,5 @@
   <ItemGroup>
     <PackageReference Include="Annium.Configuration.Abstractions" />
     <PackageReference Include="Annium.Logging.Console" />
-    <PackageReference Include="Annium.Net.Http" />
   </ItemGroup>
 </Project>

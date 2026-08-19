@@ -76,17 +76,18 @@ public class StateManager : ILogSubject
             foreach (var item in obsoleteItems)
                 await plan.Storage.DeleteAsync(item);
 
-            await NotifyAllAsync(ch => ch.InfoAsync($"{server} {plan}: scheduled backup {backupId} procedure succeed"));
+            await plan.NotifyAllAsync(
+                this,
+                ch => ch.InfoAsync($"{server} {plan}: scheduled backup {backupId} procedure succeed")
+            );
         }
         catch (Exception e)
         {
             this.Error(e);
-            await NotifyAllAsync(ch =>
-                ch.ErrorAsync($"{server} {plan}: scheduled backup {backupId} procedure failed: {e}")
+            await plan.NotifyAllAsync(
+                this,
+                ch => ch.ErrorAsync($"{server} {plan}: scheduled backup {backupId} procedure failed: {e}")
             );
         }
-
-        Task NotifyAllAsync(Func<IChannel, Task> notifyChannel) =>
-            Task.WhenAll(plan.Notifications.Values.Select(notifyChannel));
     }
 }

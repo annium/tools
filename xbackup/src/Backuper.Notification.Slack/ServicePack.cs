@@ -20,6 +20,8 @@ public class ServicePack : ServicePackBase
                 sp.GetRequiredService<ILogger>()
             );
 
+        // the channel resolves IHttpRequestFactory, and no other pack registers it
+        container.AddHttpRequestFactory(true);
         container.Add(Factory).AsSelf().Singleton();
 
         return Task.CompletedTask;

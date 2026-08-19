@@ -12,7 +12,7 @@ public class ServicePack : ServicePackBase
 {
     public override Task RegisterAsync(IServiceContainer container, IServiceProvider provider, CancellationToken ct)
     {
-        container.Add<ConnectionFactory>().Singleton();
+        container.Add<ConnectionFactory>().AsSelf().Singleton();
 
         container.AddLogging();
         container.AddShell();

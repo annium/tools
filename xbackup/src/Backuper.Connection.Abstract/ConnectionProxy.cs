@@ -9,9 +9,9 @@ public class ConnectionProxy : Resource<IConnection>, IConnection
     public ConnectionProxy(IConnection entity, string type, ILogger logger)
         : base(entity, "Connection", type, logger) { }
 
-    public Task SetupAsync() => SafeAsync("info", Entity.SetupAsync);
+    public Task SetupAsync() => SafeAsync("setup", Entity.SetupAsync);
 
-    public Task<string> BackupAsync() => SafeAsync("info", Entity.BackupAsync);
+    public Task<string> BackupAsync() => SafeAsync("backup", Entity.BackupAsync);
 
-    public Task RestoreAsync(string path) => SafeAsync("info", () => Entity.RestoreAsync(path));
+    public Task RestoreAsync(string path) => SafeAsync("restore", () => Entity.RestoreAsync(path));
 }

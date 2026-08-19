@@ -94,6 +94,162 @@ public class StateManagerTests
         channel.Infos.IsEmpty();
     }
 
+    [Fact]
+    public async Task BackupAsync_Succeeds_StoresAndAnnouncesTheSameBackupId()
+    {
+        // arrange — regression: the id was computed once for the message and again for the upload, so
+        // the two disagreed whenever the clock crossed a minute between them
+        var storage = new TestStorage([]);
+        var channel = new TestChannel();
+        var (manager, server, plan) = Setup(storage, capacity: 2, channel: channel);
+
+        // act
+        await manager.BackupAsync(server, plan);
+
+        // assert
+        var uploaded = storage.Operations.Single(x => x.StartsWith("upload:"))["upload:".Length..];
+        channel.Infos.Has(1).At(0).IsContaining(uploaded);
+    }
+
+    [Fact]
+    public async Task SetStateAsync_SchedulesEveryPlanAndSetsUpEveryConnection()
+    {
+        // arrange — the only path from configured Interval to an actual scheduled call; a deployment
+        // backs up several servers, so both loops have to fan out
+        var scheduler = new TestScheduler();
+        var manager = new StateManager(scheduler, new Namer(new TestTimeProvider()), VoidLogger.Instance);
+        var first = new TestConnection(fails: false);
+        var second = new TestConnection(fails: false);
+        var state = new Backuper.Api.State.State(
+            new Dictionary<string, Server>
+            {
+                ["db"] = new(
+                    "db",
+                    first,
+                    new Dictionary<string, Plan>
+                    {
+                        ["daily"] = NewPlan("daily", new TestStorage([]), "0 0 * * *"),
+                        ["hourly"] = NewPlan("hourly", new TestStorage([]), "0 * * * *"),
+                    }
+                ),
+                ["other"] = new(
+                    "other",
+                    second,
+                    new Dictionary<string, Plan> { ["weekly"] = NewPlan("weekly", new TestStorage([]), "0 0 * * 0") }
+                ),
+            }
+        );
+
+        // act
+        await manager.SetStateAsync(state);
+
+        // assert
+        first.SetupCount.Is(1);
+        second.SetupCount.Is(1);
+        scheduler.Intervals.Has(3);
+        scheduler.Intervals.Contains("0 0 * * *").IsTrue();
+        scheduler.Intervals.Contains("0 * * * *").IsTrue();
+        scheduler.Intervals.Contains("0 0 * * 0").IsTrue();
+    }
+
+    [Fact]
+    public async Task BackupAsync_Failure_NotifiesEveryChannel()
+    {
+        // arrange — a plan can carry several channels, and every other case wires exactly one
+        var storage = new TestStorage([]);
+        var slack = new TestChannel();
+        var email = new TestChannel();
+        var manager = new StateManager(new TestScheduler(), new Namer(new TestTimeProvider()), VoidLogger.Instance);
+        var plan = new Plan(
+            "daily",
+            storage,
+            "0 0 * * *",
+            2,
+            new Dictionary<string, IChannel> { ["slack"] = slack, ["email"] = email }
+        );
+        var server = new Server(
+            "db",
+            new TestConnection(fails: true),
+            new Dictionary<string, Plan> { ["daily"] = plan }
+        );
+
+        // act
+        await manager.BackupAsync(server, plan);
+
+        // assert
+        slack.Errors.Has(1);
+        email.Errors.Has(1);
+    }
+
+    [Fact]
+    public async Task SetStateAsync_CalledTwice_Throws()
+    {
+        // arrange — a second state would schedule a second set of jobs against the first one's plans
+        var manager = new StateManager(new TestScheduler(), new Namer(new TestTimeProvider()), VoidLogger.Instance);
+        var state = new Backuper.Api.State.State(new Dictionary<string, Server>());
+        await manager.SetStateAsync(state);
+
+        // act
+        var exception = await Wrap.It(async () => await manager.SetStateAsync(state))
+            .ThrowsAsync<InvalidOperationException>();
+
+        // assert
+        exception.Message.Is("State is already set");
+    }
+
+    [Fact]
+    public async Task SetStateAsync_ScheduledJob_RunsTheBackup()
+    {
+        // arrange — BackupAsync is internal, so the scheduled delegate is what actually connects a plan
+        // to a backup run
+        var scheduler = new TestScheduler();
+        var manager = new StateManager(scheduler, new Namer(new TestTimeProvider()), VoidLogger.Instance);
+        var storage = new TestStorage([]);
+        var plans = new Dictionary<string, Plan> { ["daily"] = NewPlan("daily", storage, "0 0 * * *") };
+        var state = new Backuper.Api.State.State(
+            new Dictionary<string, Server> { ["db"] = new("db", new TestConnection(fails: false), plans) }
+        );
+        await manager.SetStateAsync(state);
+
+        // act
+        await scheduler.Handlers.Single()();
+
+        // assert
+        storage.Operations.Count(x => x.StartsWith("upload:")).Is(1);
+    }
+
+    [Fact]
+    public async Task BackupAsync_ChannelThrows_DoesNotEscapeAndStillNotifiesTheOthers()
+    {
+        // arrange — BackupAsync is what the scheduler awaits, and an exception leaving it kills that
+        // plan's recurring loop until the process restarts
+        var storage = new TestStorage([]);
+        var working = new TestChannel();
+        var manager = new StateManager(new TestScheduler(), new Namer(new TestTimeProvider()), VoidLogger.Instance);
+        var plan = new Plan(
+            "daily",
+            storage,
+            "0 0 * * *",
+            2,
+            new Dictionary<string, IChannel> { ["broken"] = new ThrowingChannel(), ["slack"] = working }
+        );
+        var server = new Server(
+            "db",
+            new TestConnection(fails: false),
+            new Dictionary<string, Plan> { ["daily"] = plan }
+        );
+
+        // act
+        var exception = await Record.ExceptionAsync(() => manager.BackupAsync(server, plan));
+
+        // assert
+        exception.IsNull();
+        working.Infos.Has(1);
+    }
+
+    private static Plan NewPlan(string name, TestStorage storage, string interval) =>
+        new(name, storage, interval, 2, new Dictionary<string, IChannel> { ["slack"] = new TestChannel() });
+
     private static (StateManager Manager, Server Server, Plan Plan) Setup(
         TestStorage storage,
         int capacity,
@@ -125,113 +281,5 @@ public class StateManagerTests
         var server = new Server("db", connection, new Dictionary<string, Plan> { ["daily"] = plan });
 
         return (manager, server, plan, connection);
-    }
-
-    private sealed class TestStorage : IStorage
-    {
-        public List<string> Items { get; }
-        public List<string> Operations { get; } = new();
-
-        private readonly bool _failUpload;
-
-        public TestStorage(IEnumerable<string> items, bool failUpload = false)
-        {
-            Items = items.ToList();
-            _failUpload = failUpload;
-        }
-
-        public Task<string[]> ListAsync(string prefix = "") => Task.FromResult(Items.ToArray());
-
-        public Task UploadAsync(Stream source, string path)
-        {
-            if (_failUpload)
-                throw new InvalidOperationException("upload failed");
-
-            Operations.Add($"upload:{path}");
-            Items.Add(path);
-
-            return Task.CompletedTask;
-        }
-
-        public Task<Stream> DownloadAsync(string path) => throw new NotSupportedException();
-
-        public Task<bool> DeleteAsync(string path)
-        {
-            Operations.Add($"delete:{path}");
-            Items.Remove(path);
-
-            return Task.FromResult(true);
-        }
-    }
-
-    private sealed class TestConnection : IConnection
-    {
-        public string? LastPath { get; private set; }
-
-        private readonly bool _fails;
-
-        public TestConnection(bool fails)
-        {
-            _fails = fails;
-        }
-
-        public Task SetupAsync() => Task.CompletedTask;
-
-        public Task<string> BackupAsync()
-        {
-            if (_fails)
-                throw new InvalidOperationException("backup failed");
-
-            LastPath = Path.GetTempFileName();
-
-            return Task.FromResult(LastPath);
-        }
-
-        public Task RestoreAsync(string path) => Task.CompletedTask;
-    }
-
-    private sealed class TestChannel : IChannel
-    {
-        public List<string> Infos { get; } = new();
-        public List<string> Errors { get; } = new();
-
-        public Task InfoAsync(string message)
-        {
-            Infos.Add(message);
-
-            return Task.CompletedTask;
-        }
-
-        public Task WarnAsync(string message) => Task.CompletedTask;
-
-        public Task ErrorAsync(string message)
-        {
-            Errors.Add(message);
-
-            return Task.CompletedTask;
-        }
-    }
-
-    private sealed class TestTimeProvider : Annium.ITimeProvider
-    {
-        public NodaTime.Instant Now { get; } = NodaTime.Instant.FromUtc(2026, 7, 31, 12, 0);
-
-        public DateTime DateTimeNow => Now.ToDateTimeUtc();
-
-        public long UnixMsNow => Now.ToUnixTimeMilliseconds();
-
-        public long UnixSecondsNow => Now.ToUnixTimeSeconds();
-    }
-
-    private sealed class TestScheduler : IScheduler
-    {
-        public IDisposable Schedule(Func<Task> handler, string interval) => Disposable.Empty;
-
-        private sealed class Disposable : IDisposable
-        {
-            public static readonly IDisposable Empty = new Disposable();
-
-            public void Dispose() { }
-        }
     }
 }

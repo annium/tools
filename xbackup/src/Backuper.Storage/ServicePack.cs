@@ -11,7 +11,7 @@ public class ServicePack : ServicePackBase
 {
     public override Task RegisterAsync(IServiceContainer container, IServiceProvider provider, CancellationToken ct)
     {
-        container.Add<StorageFactory>().Singleton();
+        container.Add<StorageFactory>().AsSelf().Singleton();
 
         container.AddLogging();
 

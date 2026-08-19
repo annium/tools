@@ -8,6 +8,7 @@
     <PackageVersion Include="Annium.AspNetCore.Extensions" Version="1.1.32" />
     <PackageVersion Include="Annium.Configuration.Abstractions" Version="1.1.44" />
     <PackageVersion Include="Annium.Configuration.Yaml" Version="1.1.44" />
+    <PackageVersion Include="Annium.Core.Mapper" Version="1.1.44" />
     <PackageVersion Include="Annium.Core.Entrypoint" Version="1.1.44" />
     <PackageVersion Include="Annium.Core.Runtime.Loader" Version="1.1.44" />
     <PackageVersion Include="Annium.Data.Models" Version="1.1.44" />

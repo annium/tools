@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Annium.AspNetCore.Extensions" />
     <PackageReference Include="Annium.Configuration.Yaml" />
+    <PackageReference Include="Annium.Core.Mapper" />
     <PackageReference Include="Annium.Extensions.Jobs" />
     <PackageReference Include="Annium.Logging.Microsoft" />
   </ItemGroup>

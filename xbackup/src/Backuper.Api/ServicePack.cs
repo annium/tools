@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Annium.Configuration.Abstractions;
 using Annium.Configuration.Yaml;
 using Annium.Core.DependencyInjection;
+using Annium.Core.Mapper;
 using Annium.Core.Mediator;
 using Annium.Core.Runtime;
 using Annium.Extensions.Jobs;
@@ -44,12 +45,14 @@ internal class ServicePack : ServicePackBase
 
         container.Add<StateFactory>().AsSelf().Singleton();
         container.Add<StateManager>().AsSelf().Singleton();
-        container.Add<Func<State.State>>(sp => () => sp.GetRequiredService<StateManager>().State!).Singleton();
+        container.Add<Func<State.State>>(sp => () => sp.GetRequiredService<StateManager>().State!).AsSelf().Singleton();
         container.Add<Namer>().AsSelf().Singleton();
 
         container.AddScheduler();
         container.AddMediator();
         container.AddLogging();
+        // configuration binding activates ConfigurationBuilder, which takes IMapper
+        container.AddMapper();
     }
 
     public override async Task SetupAsync(IServiceProvider provider, CancellationToken ct)
@@ -59,14 +62,7 @@ internal class ServicePack : ServicePackBase
         var stateFactory = provider.GetRequiredService<StateFactory>();
         var stateManager = provider.GetRequiredService<StateManager>();
 
-        try
-        {
-            var state = stateFactory.GetState();
-            await stateManager.SetStateAsync(state);
-        }
-        catch (AggregateException ex)
-        {
-            throw ex.InnerException!;
-        }
+        var state = stateFactory.GetState();
+        await stateManager.SetStateAsync(state);
     }
 }
