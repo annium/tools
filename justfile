@@ -1,59 +1,16 @@
-import 'lib.just'
-
 set shell := ["bash", "-cu"]
 set positional-arguments
+# lib.just is copied in by the umbrella repo's `just copy-ci`; recipes redefined below
+# override the shared ones. local.just holds this repo's own private helpers.
+set allow-duplicate-recipes := true
 
-[private]
-default:
-    @just --list
+import 'lib.just'
+import 'local.just'
 
-# base
+# overrides
 
-setup:
-    @echo "=== $0 ==="
-    dotnet tool restore
-
-format:
-    @echo "=== $0 ==="
-    dotnet tool run csharpier format . --config-path $(pwd)/.editorconfig
-    dotnet tool run xs format -sc -ic
-
-format-full: format
-    @echo "=== $0 ==="
-    dotnet format style
-    dotnet format analyzers
-
-ensure-no-changes:
-    #!/usr/bin/env bash
-    set -e
-    echo "=== ensure-no-changes ==="
-    if [[ -n "$(git status --porcelain)" ]]; then
-        echo "Changes detected:"
-        git status --short
-        git --no-pager diff --no-color HEAD
-        exit 1
-    fi
-
-update:
-    @echo "=== $0 ==="
-    dotnet tool list --format json | jq -r '.data[] | "\(.packageId)"' | xargs -I% dotnet tool install %
-    dotnet tool run xs update all -sc -ic
-
-clean:
-    @echo "=== $0 ==="
-    dotnet tool run xs clean -sc -ic
-    find . -type f \( -name '*.nupkg' -o -name '*.snupkg' \) -delete
-
-build:
-    #!/usr/bin/env bash
-    set -e
-    echo "=== build ==="
-    packageVersion=$(dotnet tool run versioning get-version -v $(cat version))
-    dotnet build -c Release --nologo -v q -p:PackageVersion=$packageVersion
-
-test:
-    @echo "=== $0 ==="
-    dotnet test -c Release --no-build --report-xunit-trx
+# this repo publishes each subproject's packages separately, reading the nuget key from
+# .xs.credentials rather than taking it as an argument, so the shared pack/publish pair is replaced
 
 # publish / install / uninstall subprojects
 # publish packs with --no-build, so it expects a preceding `just build`
@@ -127,6 +84,7 @@ publish-backuper:
 
 # ci
 
+# no docs pipeline in this repo, so the shared ci-* recipes' `just docs-lint` step is dropped
 ci-merge-request-short:
     #!/usr/bin/env bash
     set -e
@@ -166,21 +124,3 @@ ci-release apiKey repository githubToken:
     just publish
     just ci-push-tag "$2" "$3"
     echo "Release complete"
-
-ci-set-package-version:
-    @echo "=== $0 ==="
-    git config user.name "it"
-    git config user.email "it@annium.com"
-    dotnet tool run versioning set-version -v $(cat version)
-
-ci-push-tag repository githubToken:
-    #!/usr/bin/env bash
-    set -e
-    echo "=== ci-push-tag ==="
-    packageVersion=$(dotnet tool run versioning get-version -v $(cat version))
-    git remote set-url origin https://x-access-token:"$2"@github.com/"$1".git
-    if git ls-remote --exit-code --tags origin "v$packageVersion" >/dev/null 2>&1; then
-        echo "tag v$packageVersion already published, skipping"
-        exit 0
-    fi
-    git push origin v$packageVersion
