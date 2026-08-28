@@ -5,34 +5,31 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Annium.AspNetCore.Extensions" Version="1.1.35" />
-    <PackageVersion Include="Annium.Configuration.Abstractions" Version="1.1.47" />
-    <PackageVersion Include="Annium.Configuration.Yaml" Version="1.1.47" />
-    <PackageVersion Include="Annium.Core.Mapper" Version="1.1.47" />
-    <PackageVersion Include="Annium.Core.Entrypoint" Version="1.1.47" />
-    <PackageVersion Include="Annium.Core.Runtime" Version="1.1.47" />
-    <PackageVersion Include="Annium.Core.Runtime.Loader" Version="1.1.47" />
-    <PackageVersion Include="Annium.Data.Models" Version="1.1.47" />
+    <PackageVersion Include="Annium.AspNetCore.Extensions" Version="1.1.36" />
+    <PackageVersion Include="Annium.Configuration.Abstractions" Version="1.1.48" />
+    <PackageVersion Include="Annium.Configuration.Yaml" Version="1.1.48" />
+    <PackageVersion Include="Annium.Core.Mapper" Version="1.1.48" />
+    <PackageVersion Include="Annium.Core.Entrypoint" Version="1.1.48" />
+    <PackageVersion Include="Annium.Core.Runtime" Version="1.1.48" />
+    <PackageVersion Include="Annium.Core.Runtime.Loader" Version="1.1.48" />
+    <PackageVersion Include="Annium.Data.Models" Version="1.1.48" />
     <!-- not referenced by any project: pulled transitively by the Annium packages above, pinned here
          so transitive pinning keeps them on the same release line. `xs update` skips unreferenced
          entries, so these move by hand together with the direct references. -->
-    <PackageVersion Include="Annium.Data.Operations" Version="1.1.47" />
-    <PackageVersion Include="Annium.Data.Operations.Serialization.Json" Version="1.1.47" />
-    <PackageVersion Include="Annium.Extensions.Arguments" Version="1.1.47" />
-    <PackageVersion Include="Annium.Extensions.Jobs" Version="1.1.47" />
-    <PackageVersion Include="Annium.Extensions.Shell" Version="1.1.47" />
-    <PackageVersion Include="Annium.Infrastructure.Hosting" Version="1.1.35" />
-    <PackageVersion Include="Annium.Logging.Console" Version="1.1.47" />
-    <PackageVersion Include="Annium.Logging.Microsoft" Version="1.1.47" />
-    <PackageVersion Include="Annium.Mesh.Server" Version="1.1.35" />
-    <PackageVersion Include="Annium.Net.Http" Version="1.1.47" />
-    <PackageVersion Include="Annium.Net.Types.Serialization.Json" Version="1.1.47" />
+    <PackageVersion Include="Annium.Extensions.Arguments" Version="1.1.48" />
+    <PackageVersion Include="Annium.Extensions.Jobs" Version="1.1.48" />
+    <PackageVersion Include="Annium.Extensions.Shell" Version="1.1.48" />
+    <PackageVersion Include="Annium.Infrastructure.Hosting" Version="1.1.36" />
+    <PackageVersion Include="Annium.Logging.Console" Version="1.1.48" />
+    <PackageVersion Include="Annium.Logging.Microsoft" Version="1.1.48" />
+    <PackageVersion Include="Annium.Mesh.Server" Version="1.1.36" />
+    <PackageVersion Include="Annium.Net.Http" Version="1.1.48" />
+    <PackageVersion Include="Annium.Net.Types.Serialization.Json" Version="1.1.48" />
     <!-- likewise transitive-only; see the note above -->
-    <PackageVersion Include="Annium.NodaTime.Serialization.Json" Version="1.1.47" />
-    <PackageVersion Include="Annium.Serialization.Json" Version="1.1.47" />
-    <PackageVersion Include="Annium.Storage.FileSystem" Version="1.1.35" />
-    <PackageVersion Include="Annium.Storage.S3" Version="1.1.35" />
-    <PackageVersion Include="Annium.Testing" Version="1.1.47" />
+    <PackageVersion Include="Annium.Serialization.Json" Version="1.1.48" />
+    <PackageVersion Include="Annium.Storage.FileSystem" Version="1.1.36" />
+    <PackageVersion Include="Annium.Storage.S3" Version="1.1.36" />
+    <PackageVersion Include="Annium.Testing" Version="1.1.48" />
     <PackageVersion Include="LibGit2Sharp" Version="0.32.0" />
     <PackageVersion Include="Microsoft.Extensions.FileSystemGlobbing" Version="10.0.11" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
